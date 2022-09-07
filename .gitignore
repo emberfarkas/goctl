@@ -1,6 +1,6 @@
 # project
-tool
-tool.exe
+goctl
+goctl.exe
 key*
 mnemonic
 data
