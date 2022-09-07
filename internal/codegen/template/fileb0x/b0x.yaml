@@ -1,0 +1,13 @@
+pkg: template
+
+dest: "./"
+
+fmt: true
+
+spread: true
+
+custom:
+  - files:
+      - "./source/"
+
+    base: "source"
