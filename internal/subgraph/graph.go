@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 
+	"github.com/emberfarkas/pkg/log"
 	"github.com/machinebox/graphql"
 	"github.com/spf13/cobra"
 	"github.com/xuri/excelize/v2"
@@ -54,7 +54,7 @@ func run(ctx context.Context) error {
 
 	for i := int64(0); ; i = i + 1000 {
 		if err := getData(ctx, i, f); err != nil {
-			log.Println(err)
+			log.Error(err)
 			break
 		}
 	}
@@ -108,7 +108,7 @@ func getData(ctx context.Context, id int64, f *excelize.File) (err error) {
 	offset := id + 2
 	for i := 0; i < len(respData.Users); i++ {
 		u := respData.Users[i]
-		log.Println("%v", u.Id)
+		log.Infof("%v", u.Id)
 		f.SetCellValue("Sheet2", fmt.Sprintf("A%d", offset), u.Id)
 		f.SetCellValue("Sheet2", fmt.Sprintf("B%d", offset), u.Balance)
 		f.SetCellValue("Sheet2", fmt.Sprintf("C%d", offset), u.Balancef)

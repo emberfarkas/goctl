@@ -16,7 +16,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "tool",
+	Use:   "goctl",
 	Short: "工具",
 	Long:  `测试，辅助相关的工具`,
 	// Uncomment the following line if your bare application

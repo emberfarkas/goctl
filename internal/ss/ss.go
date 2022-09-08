@@ -6,8 +6,8 @@ import (
 	stdhttp "net/http"
 	"time"
 
+	"github.com/emberfarkas/pkg/log"
 	"github.com/emberfarkas/pkg/net/http"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/proxy"
 )

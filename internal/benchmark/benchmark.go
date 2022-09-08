@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"runtime"
@@ -13,6 +12,7 @@ import (
 	"time"
 
 	"github.com/emberfarkas/pkg/client/eth"
+	"github.com/emberfarkas/pkg/log"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/spf13/cobra"
 )
@@ -91,24 +91,24 @@ func run(ctx context.Context) error {
 	go func(ctx context.Context) {
 		defer func() {
 			wg.Done()
-			log.Printf("run done")
+			log.Info("run done")
 			if err := recover(); err != nil {
 				const size = 64 << 10
 				buf := make([]byte, size)
 				buf = buf[:runtime.Stack(buf, false)]
 				pl := fmt.Sprintf("run call panic: %v\n%s\n", err, buf)
-				log.Printf("%s", pl)
+				log.Error("%s", pl)
 			}
 		}()
 		if err := uc.run(ctx); err != nil {
-			log.Printf("err: %v", err)
+			log.Errorf("err: %v", err)
 		}
 	}(ctx)
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
 	for {
 		s := <-c
-		log.Printf("get a signal %s", s.String())
+		log.Infof("get a signal %s", s.String())
 		switch s {
 		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 			cancel()

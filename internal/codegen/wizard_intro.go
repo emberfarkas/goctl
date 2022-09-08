@@ -3,7 +3,8 @@ package codegen
 import (
 	"context"
 	"fmt"
-	"log"
+
+	"github.com/emberfarkas/pkg/log"
 )
 
 // makeWizard creates and returns a new puppeth wizard.
@@ -51,7 +52,7 @@ func (w *wizard) run(ctx context.Context) error {
 		case choice == "3":
 			return nil
 		default:
-			log.Printf("That's not something I can do")
+			log.Warn("That's not something I can do")
 		}
 	}
 }

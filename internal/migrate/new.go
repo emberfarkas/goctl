@@ -2,12 +2,13 @@ package migrate
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 func nextSeqVersion(matches []string, seqDigits int) (string, error) {
@@ -118,7 +119,7 @@ func createCmd(dir string, startTime time.Time, format string, name string, ext 
 
 		if print {
 			absPath, _ := filepath.Abs(filename)
-			log.Println(absPath)
+			log.Info(absPath)
 		}
 	}
 

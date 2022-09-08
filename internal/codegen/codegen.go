@@ -2,8 +2,8 @@ package codegen
 
 import (
 	"context"
-	"log"
 
+	"github.com/emberfarkas/pkg/log"
 	"github.com/spf13/cobra"
 )
 

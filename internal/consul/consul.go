@@ -4,11 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/emberfarkas/pkg/net/http"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +19,6 @@ var Cmd = &cobra.Command{
 		return run(cmd.Context())
 	},
 }
-var logger log.Logger
 
 func init() {
 
@@ -38,7 +35,6 @@ func init() {
 }
 
 func run(ctx context.Context) error {
-	logger = log.NewStdLogger(os.Stdout)
 	ret, err := services(ctx)
 	if err != nil {
 		return err
