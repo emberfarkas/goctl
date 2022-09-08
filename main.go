@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/emberfarkas/goctl/internal/account"
 	"github.com/emberfarkas/goctl/internal/benchmark"
 	"github.com/emberfarkas/goctl/internal/binlog"
@@ -11,6 +9,7 @@ import (
 	"github.com/emberfarkas/goctl/internal/migrate"
 	"github.com/emberfarkas/goctl/internal/pdfcov"
 	"github.com/emberfarkas/goctl/internal/ss"
+	"github.com/emberfarkas/pkg/log"
 	"github.com/spf13/cobra"
 )
 
