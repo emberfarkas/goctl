@@ -6,9 +6,8 @@ import (
 	"io/ioutil"
 	"math"
 
-	pkgcrypto "github.com/emberfarkas/pkg/crypto"
-
 	"gitee.com/teacherming/keygen"
+	pkgcrypto "github.com/emberfarkas/pkg/crypto"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/spf13/cobra"
