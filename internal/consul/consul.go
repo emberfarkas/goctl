@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emberfarkas/pkg/net/http"
+	"github.com/go-bamboo/pkg/net/http"
 	"github.com/spf13/cobra"
 )
 

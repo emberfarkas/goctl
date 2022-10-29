@@ -9,7 +9,7 @@ import (
 	"text/template"
 
 	xtem "github.com/emberfarkas/goctl/internal/codegen/template"
-	"github.com/emberfarkas/pkg/tools"
+	"github.com/go-bamboo/pkg/filex"
 )
 
 type biz struct {
@@ -172,14 +172,14 @@ func (uc *biz) genCodeModelGo(ctx context.Context, tab *SysTables) (err error) {
 	if path.IsAbs(backpath) {
 		prefixPath = path.Join(backpath, tab.Module, "internal/model")
 	} else {
-		wd := tools.GetCurrentPath()
+		wd := filex.GetCurrentPath()
 		prefixPath = path.Join(wd, backpath, tab.Module, "internal/model")
 	}
-	if err = tools.PathCreate(prefixPath); err != nil {
+	if err = filex.PathCreate(prefixPath); err != nil {
 		log.Fatal(err)
 		return
 	}
-	if err = tools.FileCreate(b1, path.Join(prefixPath, tab.PackageName+".go")); err != nil {
+	if err = filex.FileCreate(b1, path.Join(prefixPath, tab.PackageName+".go")); err != nil {
 		log.Fatal(err)
 		return
 	}
@@ -207,13 +207,13 @@ func (uc *biz) genCodeDaoGo(ctx context.Context, tab *SysTables) (err error) {
 	if path.IsAbs(backpath) {
 		prefixPath = path.Join(backpath, tab.Module, "internal/dao")
 	} else {
-		wd := tools.GetCurrentPath()
+		wd := filex.GetCurrentPath()
 		prefixPath = path.Join(wd, backpath, tab.Module, "internal/dao")
 	}
-	if err = tools.PathCreate(prefixPath); err != nil {
+	if err = filex.PathCreate(prefixPath); err != nil {
 		return
 	}
-	if err = tools.FileCreate(b2, path.Join(prefixPath, tab.PackageName+".go")); err != nil {
+	if err = filex.FileCreate(b2, path.Join(prefixPath, tab.PackageName+".go")); err != nil {
 		return
 	}
 	return
@@ -240,13 +240,13 @@ func (uc *biz) genCodeApiJs(ctx context.Context, tab *SysTables) (err error) {
 	if path.IsAbs(backpath) {
 		prefixPath = path.Join(adminpath, "api", tab.Module)
 	} else {
-		wd := tools.GetCurrentPath()
+		wd := filex.GetCurrentPath()
 		prefixPath = path.Join(wd, adminpath, "api", tab.Module)
 	}
-	if err = tools.PathCreate(prefixPath); err != nil {
+	if err = filex.PathCreate(prefixPath); err != nil {
 		return
 	}
-	if err = tools.FileCreate(b3, path.Join(prefixPath, tab.PackageName+".js")); err != nil {
+	if err = filex.FileCreate(b3, path.Join(prefixPath, tab.PackageName+".js")); err != nil {
 		return
 	}
 	return
@@ -273,13 +273,13 @@ func (uc *biz) genCodeViewVue(ctx context.Context, tab *SysTables) (err error) {
 	if path.IsAbs(backpath) {
 		prefixPath = path.Join(adminpath, "views", tab.Module, tab.PackageName)
 	} else {
-		wd := tools.GetCurrentPath()
+		wd := filex.GetCurrentPath()
 		prefixPath = path.Join(wd, adminpath, "views", tab.Module, tab.PackageName)
 	}
-	if err = tools.PathCreate(prefixPath); err != nil {
+	if err = filex.PathCreate(prefixPath); err != nil {
 		return
 	}
-	if err = tools.FileCreate(b4, path.Join(prefixPath, "index.vue")); err != nil {
+	if err = filex.FileCreate(b4, path.Join(prefixPath, "index.vue")); err != nil {
 		return
 	}
 	return

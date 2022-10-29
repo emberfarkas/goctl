@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"bls/tool/internal/codegen"
-	. "bls/tool/internal/codegen/template"
+	"github.com/emberfarkas/goctl/internal/codegen"
+	. "github.com/emberfarkas/goctl/internal/codegen/template"
 )
 
 func TestGoModelTemplate(t *testing.T) {

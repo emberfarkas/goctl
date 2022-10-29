@@ -7,9 +7,9 @@ import (
 	"math"
 
 	"gitee.com/teacherming/keygen"
-	pkgcrypto "github.com/emberfarkas/pkg/crypto"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/crypto"
+	pkgcrypto "github.com/go-bamboo/pkg/crypto"
 	"github.com/spf13/cobra"
 	"github.com/tyler-smith/go-bip39"
 )

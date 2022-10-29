@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emberfarkas/pkg/migrate"
+	"github.com/go-bamboo/pkg/migrate"
 	"github.com/spf13/cobra"
 )
 

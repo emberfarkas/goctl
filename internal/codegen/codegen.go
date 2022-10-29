@@ -3,7 +3,7 @@ package codegen
 import (
 	"context"
 
-	"github.com/emberfarkas/pkg/log"
+	"github.com/go-bamboo/pkg/log"
 	"github.com/spf13/cobra"
 )
 

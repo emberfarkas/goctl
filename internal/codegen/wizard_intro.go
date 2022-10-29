@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/emberfarkas/pkg/log"
+	"github.com/go-bamboo/pkg/log"
 )
 
 // makeWizard creates and returns a new puppeth wizard.

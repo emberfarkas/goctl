@@ -6,10 +6,11 @@ import (
 	"github.com/emberfarkas/goctl/internal/binlog"
 	"github.com/emberfarkas/goctl/internal/codegen"
 	"github.com/emberfarkas/goctl/internal/consul"
+	"github.com/emberfarkas/goctl/internal/eth"
 	"github.com/emberfarkas/goctl/internal/migrate"
 	"github.com/emberfarkas/goctl/internal/pdfcov"
 	"github.com/emberfarkas/goctl/internal/ss"
-	"github.com/emberfarkas/pkg/log"
+	"github.com/go-bamboo/pkg/log"
 	"github.com/spf13/cobra"
 )
 
@@ -43,6 +44,7 @@ func init() {
 	rootCmd.AddCommand(codegen.Cmd)
 	rootCmd.AddCommand(pdfcov.Cmd)
 	rootCmd.AddCommand(binlog.Cmd)
+	rootCmd.AddCommand(eth.Cmd)
 }
 
 func main() {

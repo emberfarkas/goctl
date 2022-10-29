@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emberfarkas/pkg/log"
+	"github.com/go-bamboo/pkg/log"
 	"github.com/machinebox/graphql"
 	"github.com/spf13/cobra"
 	"github.com/xuri/excelize/v2"

@@ -13,8 +13,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/emberfarkas/pkg/contracts/flattened"
-	"github.com/emberfarkas/pkg/tools"
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common"
@@ -23,6 +21,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/go-bamboo/contrib/contracts/flattened"
+	"github.com/go-bamboo/pkg/tools"
 	"github.com/onrik/ethrpc"
 	"github.com/sony/sonyflake"
 	"github.com/syndtr/goleveldb/leveldb"

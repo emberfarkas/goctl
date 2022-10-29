@@ -11,9 +11,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/emberfarkas/pkg/client/eth"
-	"github.com/emberfarkas/pkg/log"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/go-bamboo/pkg/client/eth"
+	"github.com/go-bamboo/pkg/log"
 	"github.com/spf13/cobra"
 )
 
