@@ -88,7 +88,7 @@ func (w *wizard) readURL(prompt string) *url.URL {
 		}
 		uri, err := url.Parse(strings.TrimSpace(text))
 		if err != nil {
-			log.Printf("Invalid input, expected URL", "err", err)
+			log.Printf("Invalid input, expected URL, err: %v", err)
 			continue
 		}
 		return uri
@@ -109,7 +109,7 @@ func (w *wizard) readInt(prompt string) int {
 		}
 		val, err := strconv.Atoi(strings.TrimSpace(text))
 		if err != nil {
-			log.Printf("Invalid input, expected integer", "err", err)
+			log.Printf("Invalid input, expected integer, err: %v \n", err)
 			continue
 		}
 		return val
@@ -131,7 +131,7 @@ func (w *wizard) readDefaultInt(prompt string, def int) int {
 		}
 		val, err := strconv.Atoi(strings.TrimSpace(text))
 		if err != nil {
-			log.Printf("Invalid input, expected integer", "err", err)
+			log.Printf("Invalid input, expected integer, err: %v\n", err)
 			continue
 		}
 		return val

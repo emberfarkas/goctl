@@ -35,4 +35,5 @@ func run(ctx context.Context) error {
 
 	log.Info("level size:", stats.LevelSizes, len(stats.LevelSizes))
 	log.Info("level tables counts:", stats.LevelTablesCounts, len(stats.LevelDurations))
+	return nil
 }
