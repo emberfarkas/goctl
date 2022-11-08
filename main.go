@@ -10,6 +10,7 @@ import (
 	"github.com/emberfarkas/goctl/internal/migrate"
 	"github.com/emberfarkas/goctl/internal/pdfcov"
 	"github.com/emberfarkas/goctl/internal/ss"
+	"github.com/emberfarkas/goctl/internal/telegram"
 	"github.com/go-bamboo/pkg/log"
 	"github.com/spf13/cobra"
 )
@@ -45,6 +46,7 @@ func init() {
 	rootCmd.AddCommand(pdfcov.Cmd)
 	rootCmd.AddCommand(binlog.Cmd)
 	rootCmd.AddCommand(eth.Cmd)
+	rootCmd.AddCommand(telegram.Cmd)
 }
 
 func main() {

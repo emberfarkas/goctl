@@ -21,7 +21,6 @@ var (
 		},
 	}
 	hash string // 交易hash
-
 )
 
 func init() {

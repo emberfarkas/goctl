@@ -23,9 +23,13 @@ require (
 )
 
 require (
+	github.com/depocket/multicall-go v0.0.33
 	github.com/fbsobreira/gotron-sdk v0.0.0-20211102183839-58a64f4da5f4 // indirect
 	github.com/go-bamboo/contrib v0.0.1
+	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/matryer/is v1.4.0 // indirect
 	github.com/sahilm/fuzzy v0.1.0
+	github.com/tidwall/gjson v1.14.3
 	golang.org/x/crypto v0.0.0-20220926161630-eccd6366d1be // indirect
+	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af
 )
