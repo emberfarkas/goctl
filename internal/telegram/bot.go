@@ -39,7 +39,7 @@ func run1(ctx context.Context) error {
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
 	}
 
-	var chatId tele.Recipient
+	// var chatId tele.Recipient
 
 	b, err := tele.NewBot(pref)
 	if err != nil {
