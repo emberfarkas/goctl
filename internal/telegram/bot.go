@@ -2,10 +2,11 @@ package telegram
 
 import (
 	"context"
+	"time"
 
 	"github.com/go-bamboo/pkg/log"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/spf13/cobra"
+	tele "gopkg.in/telebot.v3"
 )
 
 // Cmd represents the config command
@@ -14,7 +15,7 @@ var Cmd = &cobra.Command{
 	Short: "telegram相关辅助工具",
 	Long:  `一些批处理bot的工具`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return run(cmd.Context())
+		return run1(cmd.Context())
 	},
 }
 
@@ -32,24 +33,35 @@ func init() {
 	// Cmd.PersistentFlags().StringVarP(&url, "url", "u", "amqp://admin:admin@127.0.0.1:5672/", "new account")
 }
 
-func run(ctx context.Context) error {
-	bot, err := tgbotapi.NewBotAPI("5501857852:AAEgPUixc7SD9mVGQSCwMp3_7x_KXqF4nFg")
-	if err != nil {
-		return err
+func run1(ctx context.Context) error {
+	pref := tele.Settings{
+		Token:  "5501857852:AAEgPUixc7SD9mVGQSCwMp3_7x_KXqF4nFg",
+		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
 	}
-	for i := 0; ; i++ {
-		u := tgbotapi.NewUpdate(i)
-		u.Timeout = 60
-		updates := bot.GetUpdatesChan(u)
 
-		for update := range updates {
-			if update.Message != nil { // If we got a message
-				log.Infof("[%s] %s", update.Message.From.UserName, update.Message.Text)
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-				msg.ReplyToMessageID = update.Message.MessageID
+	var chatId tele.Recipient
 
-				bot.Send(msg)
+	b, err := tele.NewBot(pref)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	go func() {
+		// b.Send())
+		for i := 0; i < 1000; i++ {
+			if chatId != nil {
+				b.Send(chatId, "小金你好")
+			} else {
+				time.Sleep(1 * time.Minute)
 			}
 		}
-	}
+	}()
+
+	b.Handle("/hello", func(c tele.Context) error {
+		chatId = c.Recipient()
+		return c.Send("Hello!")
+	})
+
+	b.Start()
+	return nil
 }
