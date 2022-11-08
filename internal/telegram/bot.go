@@ -39,26 +39,26 @@ func run1(ctx context.Context) error {
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
 	}
 
-	// var chatId tele.Recipient
+	var chatId tele.Recipient
 
 	b, err := tele.NewBot(pref)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// go func() {
-	// 	// b.Send())
-	// 	for i := 0; i < 1000; i++ {
-	// 		if chatId != nil {
-	// 			b.Send(chatId, "小金你好")
-	// 		} else {
-	// 			time.Sleep(1 * time.Minute)
-	// 		}
-	// 	}
-	// }()
+	go func() {
+		// b.Send())
+		for i := 0; i < 1000; i++ {
+			if chatId != nil {
+				b.Send(chatId, "小金你好")
+			} else {
+				time.Sleep(1 * time.Minute)
+			}
+		}
+	}()
 
 	b.Handle("/hello", func(c tele.Context) error {
-		// chatId = c.Recipient()
+		chatId = c.Recipient()
 		// fmt.Print(chatId)
 		return c.Send("Hello!")
 	})
