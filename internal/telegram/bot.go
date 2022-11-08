@@ -2,6 +2,7 @@ package telegram
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-bamboo/pkg/log"
@@ -51,6 +52,7 @@ func run1(ctx context.Context) error {
 		for i := 0; i < 1000; i++ {
 			if chatId != nil {
 				b.Send(chatId, "小金你好")
+				time.Sleep(1 * time.Second)
 			} else {
 				time.Sleep(1 * time.Minute)
 			}
@@ -59,7 +61,7 @@ func run1(ctx context.Context) error {
 
 	b.Handle("/hello", func(c tele.Context) error {
 		chatId = c.Recipient()
-		// fmt.Print(chatId)
+		fmt.Print(chatId)
 		return c.Send("Hello!")
 	})
 
