@@ -2,8 +2,9 @@ package eth
 
 import (
 	"context"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/go-bamboo/pkg/log"
-	"github.com/onrik/ethrpc"
 	"github.com/spf13/cobra"
 )
 
@@ -30,8 +31,11 @@ func init() {
 }
 
 func getCode(ctx context.Context) error {
-	rpc := ethrpc.New("https://bsc-dataseed4.ninicoin.io")
-	code, err := rpc.EthGetCode("0x309a174c27da0f03e6c36617f57d9560c5895991", "latest")
+	rpc, err := ethclient.Dial("https://bsc-dataseed4.ninicoin.io")
+	if err != nil {
+		return err
+	}
+	code, err := rpc.CodeAt(context.TODO(), common.HexToAddress("0x309a174c27da0f03e6c36617f57d9560c5895991"), nil)
 	if err != nil {
 		return err
 	}

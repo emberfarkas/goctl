@@ -3,8 +3,9 @@ package eth
 import (
 	"context"
 
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/go-bamboo/pkg/log"
-	"github.com/onrik/ethrpc"
 	"github.com/spf13/cobra"
 )
 
@@ -33,12 +34,15 @@ func init() {
 func getTx(ctx context.Context) error {
 	hash = "0xb5519dc9333aaed59898de7093946dc22c69f240a40c5625e67c02b12749c85c"
 	log.Infof("hash: %v", hash)
-	rpc := ethrpc.New("https://bsc-dataseed4.ninicoin.io")
-	tx, err := rpc.EthGetTransactionByHash(hash)
+	rpc, err := ethclient.Dial("https://bsc-dataseed4.ninicoin.io")
 	if err != nil {
 		return err
 	}
-	log.Debugf("from: %v", tx.From)
+	tx, _, err := rpc.TransactionByHash(context.TODO(), common.HexToHash(hash))
+	if err != nil {
+		return err
+	}
+	log.Debugf("from: %v", tx.To())
 	log.Debugf("to: %v", tx.To)
 	return nil
 }

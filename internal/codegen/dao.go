@@ -4,22 +4,21 @@ import (
 	"context"
 	"errors"
 
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"github.com/go-bamboo/pkg/store/gormx"
 )
 
 // Dao dao interface
 type Dao interface {
 	Close()
 	Ping(ctx context.Context) (err error)
-	
+
 	GetDBTablesPage(dbname string, e *DBTables, pageSize int, pageIndex int) ([]DBTables, int64, error)
 	GetDBColumnsList(dbname string, e *DBColumns) ([]DBColumns, error)
 }
 
 // dao dao.
 type dao struct {
-	orm *gorm.DB
+	orm *gormx.DB
 }
 
 // New new a dao and return.
@@ -28,14 +27,11 @@ func New() (d Dao, err error) {
 }
 
 func newDao() (d *dao, err error) {
-	c := &gorm.Config{}
-	db, err := gorm.Open(mysql.New(
-		mysql.Config{
-			DSN: dsn,
-		}), c)
-	if err != nil {
-		return nil, err
-	}
+	db := gormx.MustNew(&gormx.Conf{
+		Driver:   "mysql",
+		Source:   dsn,
+		LogLevel: 3,
+	})
 	d = &dao{
 		orm: db,
 	}
@@ -82,4 +78,3 @@ func (d *dao) GetDBTablesPage(dbname string, e *DBTables, pageSize int, pageInde
 	}
 	return
 }
-

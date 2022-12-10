@@ -23,7 +23,6 @@ import (
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/go-bamboo/contrib/contracts/flattened"
 	"github.com/go-bamboo/pkg/tools"
-	"github.com/onrik/ethrpc"
 	"github.com/sony/sonyflake"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/opt"
@@ -242,8 +241,8 @@ func (uc *biz) post(ctx context.Context, wg *sync.WaitGroup, ch chan string) {
 			return
 		case rawTx := <-ch:
 			if len(rawTx) > 0 {
-				client := rpcpool.Get().(*ethrpc.EthRPC)
-				hash, err := client.EthSendRawTransaction(rawTx)
+				client := rpcpool.Get().(*ethclient.Client)
+				hash, _, err := client.TransactionByHash(context.TODO(), common.HexToHash(rawTx))
 				rpcpool.Put(client)
 				if err != nil {
 					log.Printf("3. warn: %v", err)
@@ -407,8 +406,8 @@ func (uc *biz) runTest(ctx context.Context) error {
 	fromAddr := crypto.PubkeyToAddress(*pubKeyECDSA)
 
 	// 获取交易数
-	client := rpcpool.Get().(*ethrpc.EthRPC)
-	no, err := client.EthGetTransactionCount(fromAddr.Hex(), "latest")
+	client := rpcpool.Get().(*ethclient.Client)
+	no, err := client.NonceAt(context.TODO(), fromAddr, nil)
 	rpcpool.Put(client)
 	if err != nil {
 		log.Printf("err: %v", err)
@@ -460,8 +459,8 @@ func (uc *biz) runTest1(ctx context.Context) error {
 	fromAddr := crypto.PubkeyToAddress(*pubKeyECDSA)
 
 	// 获取线上nonce值
-	client := rpcpool.Get().(*ethrpc.EthRPC)
-	no, err := client.EthGetTransactionCount(fromAddr.Hex(), "latest")
+	client := rpcpool.Get().(*ethclient.Client)
+	no, err := client.NonceAt(context.TODO(), fromAddr, nil)
 	rpcpool.Put(client)
 	if err != nil {
 		log.Printf("err: %v", err)
@@ -544,8 +543,8 @@ func (uc *biz) runTest2(ctx context.Context) error {
 	fromAddr := crypto.PubkeyToAddress(*pubKeyECDSA)
 
 	// 获取线上nonce值
-	client := rpcpool.Get().(*ethrpc.EthRPC)
-	no, err := client.EthGetTransactionCount(fromAddr.Hex(), "latest")
+	client := rpcpool.Get().(*ethclient.Client)
+	no, err := client.NonceAt(context.TODO(), fromAddr, nil)
 	rpcpool.Put(client)
 	if err != nil {
 		log.Printf("err: %v", err)
@@ -597,8 +596,8 @@ func (uc *biz) runMint(ctx context.Context) error {
 		if err := uc.ks.Unlock(acc, "123456"); err != nil {
 			return err
 		}
-		client := rpcpool.Get().(*ethrpc.EthRPC)
-		no, err := client.EthGetTransactionCount(acc.Address.Hex(), "latest")
+		client := rpcpool.Get().(*ethclient.Client)
+		no, err := client.NonceAt(context.TODO(), acc.Address, nil)
 		rpcpool.Put(client)
 		if err != nil {
 			return err
@@ -638,8 +637,8 @@ func (uc *biz) runInitV(ctx context.Context) error {
 	fromAddr := crypto.PubkeyToAddress(*pubKeyECDSA)
 
 	// 获取线上nonce值
-	client := rpcpool.Get().(*ethrpc.EthRPC)
-	no, err := client.EthGetTransactionCount(fromAddr.Hex(), "latest")
+	client := rpcpool.Get().(*ethclient.Client)
+	no, err := client.NonceAt(context.TODO(), fromAddr, nil)
 	rpcpool.Put(client)
 	if err != nil {
 		log.Printf("err: %v", err)
@@ -701,8 +700,8 @@ func (uc *biz) runTransV(ctx context.Context) error {
 		}
 
 		// 拿去nonce
-		client := rpcpool.Get().(*ethrpc.EthRPC)
-		no, err := client.EthGetTransactionCount(from.Address.Hex(), "latest")
+		client := rpcpool.Get().(*ethclient.Client)
+		no, err := client.NonceAt(context.TODO(), from.Address, nil)
 		rpcpool.Put(client)
 		if err != nil {
 			return err
@@ -741,7 +740,7 @@ func (uc *biz) runTransV(ctx context.Context) error {
 
 func (uc *biz) showResult(ctx context.Context) error {
 	// 获取交易数
-	client := rpcpool.Get().(*ethrpc.EthRPC)
+	client := rpcpool.Get().(*ethclient.Client)
 	for uc.stat.fail+uc.stat.success < uc.stat.send {
 		//
 		start := time.Now()
@@ -754,22 +753,22 @@ func (uc *biz) showResult(ctx context.Context) error {
 			switch state {
 			case 0:
 				// test
-				receipt, err := client.EthGetTransactionReceipt(key.(string))
+				receipt, err := client.TransactionReceipt(context.TODO(), common.HexToHash(key.(string)))
 				if err != nil {
 					log.Printf("err: %v", err)
 					return true
 				}
-				if receipt.Status == "0x1" {
+				if receipt.Status == 1 {
 					atomic.AddInt32(&uc.stat.success, 1)
 					uc.hashx.Store(key, 1)
 
 					// 成功后，测试数据
-					tx, err := client.EthGetTransactionByHash(key.(string))
+					tx, _, err := client.TransactionByHash(context.TODO(), common.HexToHash(key.(string)))
 					if err != nil {
 						log.Printf("err: %v", err)
 						return true
 					}
-					input, err := hexutil.Decode(tx.Input)
+					input, err := hexutil.Decode(string(tx.Data()))
 					if err != nil {
 						log.Printf("err: %v", err)
 						return true
@@ -780,17 +779,17 @@ func (uc *biz) showResult(ctx context.Context) error {
 						return true
 					}
 					log.Printf("input data : %v", string(str))
-				} else if receipt.Status == "0x0" {
+				} else if receipt.Status == 0 {
 					atomic.AddInt32(&uc.stat.fail, 1)
 					uc.hashx.Store(key, 2)
 				} else {
 					if retry == 1 {
-						client.EthSendRawTransaction(value.(string))
+						//client.EthSendRawTransaction(value.(string))
 					}
 				}
 			case 2:
 				if retry == 1 {
-					client.EthSendRawTransaction(value.(string))
+					//client.EthSendRawTransaction(value.(string))
 				}
 			}
 			return true

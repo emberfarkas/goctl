@@ -2,14 +2,9 @@ package ss
 
 import (
 	"context"
-	"net"
-	stdhttp "net/http"
-	"time"
-
 	"github.com/go-bamboo/pkg/log"
-	"github.com/go-bamboo/pkg/net/http"
+	"github.com/imroc/req/v3"
 	"github.com/spf13/cobra"
-	"golang.org/x/net/proxy"
 )
 
 // Cmd represents the config command
@@ -37,27 +32,21 @@ func init() {
 }
 
 func run(ctx context.Context) error {
-	socks5proxy, err := proxy.SOCKS5("tcp", "127.0.0.1:1079", nil, &net.Dialer{
-		Timeout:   30 * time.Second,
-		KeepAlive: 30 * time.Second,
-	})
+	//socks5proxy, err := proxy.SOCKS5("tcp", "127.0.0.1:1079", nil, &net.Dialer{
+	//	Timeout:   30 * time.Second,
+	//	KeepAlive: 30 * time.Second,
+	//})
+	//if err != nil {
+	//	panic(err)
+	//}
+	//transport := &stdhttp.Transport{
+	//	Proxy:               nil,
+	//	Dial:                socks5proxy.Dial,
+	//	TLSHandshakeTimeout: 10 * time.Second,
+	//}
+	body, err := req.Get("http://www.google.com")
 	if err != nil {
-		panic(err)
-	}
-	transport := &stdhttp.Transport{
-		Proxy:               nil,
-		Dial:                socks5proxy.Dial,
-		TLSHandshakeTimeout: 10 * time.Second,
-	}
-
-	agent, err := http.NewSuperAgent(http.Timeout(5 * time.Second))
-	if err != nil {
-		return err
-	}
-	agent.Transport = transport
-	_, body, errs := agent.Get("http://www.google.com").End()
-	if len(errs) > 0 {
-		log.Fatal(errs)
+		log.Fatal(err)
 	}
 	log.Infof("%v", body)
 	return nil

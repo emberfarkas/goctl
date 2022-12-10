@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/go-bamboo/pkg/client/eth"
 	"github.com/go-bamboo/pkg/log"
 	"github.com/spf13/cobra"
 )
@@ -46,7 +45,11 @@ var (
 	}
 	rpcpool = sync.Pool{
 		New: func() interface{} {
-			return eth.New(url)
+			c, err := ethclient.Dial(url)
+			if err != nil {
+				return nil
+			}
+			return c
 		},
 	}
 )

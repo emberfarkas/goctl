@@ -4,9 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"time"
 
-	"github.com/go-bamboo/pkg/net/http"
+	"github.com/imroc/req/v3"
 	"github.com/spf13/cobra"
 )
 
@@ -48,26 +47,16 @@ func run(ctx context.Context) error {
 }
 
 func services(ctx context.Context) (ret map[string]*json.RawMessage, err error) {
-	agent, err := http.NewSuperAgent(http.Timeout(5 * time.Second))
+	_, err = req.R().SetResult(&ret).Get("http://121.36.71.137:8500/v1/agent/services")
 	if err != nil {
-		return
-	}
-	_, _, errs := agent.Get("http://121.36.71.137:8500/v1/agent/services").EndStruct(&ret)
-	if len(errs) > 0 {
-		err = errs[0]
 		return
 	}
 	return
 }
 
 func deregister(ctx context.Context, key string) (err error) {
-	agent, err := http.NewSuperAgent(http.Timeout(5 * time.Second))
+	_, err = req.R().Put(fmt.Sprintf("http://121.36.71.137:8500/v1/agent/service/deregister/%s", key))
 	if err != nil {
-		return
-	}
-	_, _, errs := agent.Put(fmt.Sprintf("http://121.36.71.137:8500/v1/agent/service/deregister/%s", key)).End()
-	if len(errs) > 0 {
-		err = errs[0]
 		return
 	}
 	return
