@@ -7,6 +7,7 @@ import (
 	"github.com/emberfarkas/goctl/internal/codegen"
 	"github.com/emberfarkas/goctl/internal/consul"
 	"github.com/emberfarkas/goctl/internal/eth"
+	"github.com/emberfarkas/goctl/internal/gormgen"
 	"github.com/emberfarkas/goctl/internal/migrate"
 	"github.com/emberfarkas/goctl/internal/pdfcov"
 	"github.com/emberfarkas/goctl/internal/ss"
@@ -47,6 +48,7 @@ func init() {
 	rootCmd.AddCommand(binlog.Cmd)
 	rootCmd.AddCommand(eth.Cmd)
 	rootCmd.AddCommand(telegram.Cmd)
+	rootCmd.AddCommand(gormgen.Cmd)
 }
 
 func main() {

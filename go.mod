@@ -18,6 +18,10 @@ require (
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/xuri/excelize/v2 v2.6.1
 	golang.org/x/net v0.1.0
+	gopkg.in/telebot.v3 v3.1.2
+	gopkg.in/yaml.v3 v3.0.1
+	gorm.io/driver/sqlserver v1.4.1 // indirect
+	gorm.io/gen v0.3.18
 )
 
 require (
@@ -27,5 +31,4 @@ require (
 	github.com/matryer/is v1.4.0 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/tklauser/numcpus v0.5.0 // indirect
-	gopkg.in/telebot.v3 v3.1.2
 )
