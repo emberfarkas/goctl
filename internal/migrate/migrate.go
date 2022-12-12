@@ -80,9 +80,15 @@ var newCmd = &cobra.Command{
 	Short: "通用模板新建",
 	Long:  `创建migrate模板`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var cmdParse YamlConfig
+		if genPath != "" {
+			if configFileParams, err := loadConfigFile(genPath); err == nil && configFileParams != nil {
+				cmdParse = *configFileParams
+			}
+		}
 		seq := false
 		seqDigits := 6
-		return commonds.CreateCmd("./", time.Now(), defaultTimeFormat, name, "sql", seq, seqDigits, true)
+		return commonds.CreateCmd(cmdParse.Path, time.Now(), defaultTimeFormat, name, "sql", seq, seqDigits, true)
 	},
 }
 
@@ -150,7 +156,7 @@ func init() {
 	Cmd.AddCommand(newCmd, exportCmd, upCmd)
 
 	// Here you will define your flags and configuration settings.
-	upCmd.Flags().StringVar(&genPath, "c", "", "is path for gen.yml")
+	newCmd.Flags().StringVar(&genPath, "c", "", "is path for gen.yml")
 	newCmd.Flags().StringVar(&name, "name", "default", "file name")
 
 	// exportCmd.Flags().StringVar(&dsn, "dsn", "", "数据库链接")
