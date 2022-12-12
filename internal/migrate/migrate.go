@@ -147,8 +147,6 @@ var upCmd = &cobra.Command{
 			return err
 		}
 		return nil
-
-		return nil
 	},
 }
 
