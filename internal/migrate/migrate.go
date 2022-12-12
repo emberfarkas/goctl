@@ -2,12 +2,19 @@ package migrate
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"time"
 
 	"github.com/go-bamboo/pkg/log"
-	"github.com/go-bamboo/pkg/migrate"
+	commonds "github.com/go-bamboo/pkg/migrate"
+	_ "github.com/golang-migrate/migrate/v4/database"
+	_ "github.com/golang-migrate/migrate/v4/database/mysql"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
+
+	// _ "github.com/golang-migrate/migrate/v4/database/sqlserver"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/source"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
@@ -20,39 +27,34 @@ var (
 )
 
 // DefaultOutPath default path
-const DefaultOutPath = "./migrations"
-
-var (
+const (
+	defaultPath       = "file://./migrations"
 	defaultTimeFormat = "20060102150405"
-
-	name string
-
-	genPath   string
-	dsn       string
-	db        string
-	tableList string
-	outPath   string
 )
 
-// CmdParams is command line parameters
-type CmdParams struct {
-	DSN     string `yaml:"dsn"`     // consult[https://gorm.io/docs/connecting_to_the_database.html]"
-	DB      string `yaml:"db"`      // input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]
-	OutPath string `yaml:"outPath"` // specify a directory for output
-}
+var (
+	name string
+
+	genPath     string
+	sourceURL   string
+	path        string
+	databaseURL string
+)
 
 // YamlConfig is yaml config struct
 type YamlConfig struct {
-	Version  string     `yaml:"version"`  //
-	Database *CmdParams `yaml:"database"` //
+	Version     string `yaml:"version"` //
+	SourceURL   string `yaml:"source"`
+	Path        string `yaml:"path"` // specify a directory for migrates
+	DatabaseURL string `yaml:"database"`
 }
 
 type Config struct {
-	GenGorm YamlConfig `yaml:"migrate"`
+	Migrate YamlConfig `yaml:"migrate"`
 }
 
 // loadConfigFile load config file from path
-func loadConfigFile(path string) (*CmdParams, error) {
+func loadConfigFile(path string) (*YamlConfig, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -62,8 +64,8 @@ func loadConfigFile(path string) (*CmdParams, error) {
 	if cmdErr := yaml.NewDecoder(file).Decode(&config); cmdErr != nil {
 		return nil, cmdErr
 	}
-	log.Debugf("dsn: %v, db: %v", config.GenGorm.Database.DSN, config.GenGorm.Database.DB)
-	return config.GenGorm.Database, nil
+	log.Debugf("source: %v, db: %v", config.Migrate.SourceURL, config.Migrate.DatabaseURL)
+	return &config.Migrate, nil
 }
 
 // Cmd represents the new command
@@ -80,7 +82,7 @@ var newCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		seq := false
 		seqDigits := 6
-		return createCmd("./", time.Now(), defaultTimeFormat, name, "sql", seq, seqDigits, true)
+		return commonds.CreateCmd("./", time.Now(), defaultTimeFormat, name, "sql", seq, seqDigits, true)
 	},
 }
 
@@ -89,9 +91,15 @@ var exportCmd = &cobra.Command{
 	Short: "通用模板新建",
 	Long:  `创建migrate模板`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		var cmdParse YamlConfig
+		if genPath != "" {
+			if configFileParams, err := loadConfigFile(genPath); err == nil && configFileParams != nil {
+				cmdParse = *configFileParams
+			}
+		}
 		seq := false
 		seqDigits := 6
-		return createCmd("./", time.Now(), defaultTimeFormat, name, "sql", seq, seqDigits, true)
+		return commonds.CreateCmd(cmdParse.Path, time.Now(), defaultTimeFormat, name, "sql", seq, seqDigits, true)
 	},
 }
 
@@ -100,32 +108,40 @@ var upCmd = &cobra.Command{
 	Short: "更新数据库",
 	Long:  `更新数据库`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var cmdParse CmdParams
+		var cmdParse YamlConfig
 		if genPath != "" {
 			if configFileParams, err := loadConfigFile(genPath); err == nil && configFileParams != nil {
 				cmdParse = *configFileParams
 			}
 		}
 		// cmd first
-		if dsn != "" {
-			cmdParse.DSN = dsn
+		if sourceURL != "" {
+			cmdParse.SourceURL = sourceURL
 		}
-		if db != "" {
-			cmdParse.DB = db
+		if sourceURL == "" && path != "" {
+			cmdParse.SourceURL = path
 		}
-		if outPath != "" {
-			cmdParse.OutPath = outPath
+		if databaseURL != "" {
+			cmdParse.DatabaseURL = databaseURL
 		}
-		//
-		sourceURL := fmt.Sprintf("file://%v", cmdParse.OutPath)
-		mf := &migrate.Config{
-			Driver:    cmdParse.DB,
-			Source:    cmdParse.DSN,
-			SourceURL: sourceURL,
-		}
-		if err := migrate.MigrateUp(mf); err != nil {
+		m, err := migrate.New(cmdParse.SourceURL, cmdParse.DatabaseURL)
+		defer func() {
+			if err != nil {
+				if _, err := m.Close(); err != nil {
+					log.Error(err)
+				}
+			}
+		}()
+		if err != nil {
 			return err
 		}
+		if err = m.Up(); err != nil {
+			if err.Error() == "no change" {
+			}
+			return err
+		}
+		return nil
+
 		return nil
 	},
 }
@@ -134,14 +150,14 @@ func init() {
 	Cmd.AddCommand(newCmd, exportCmd, upCmd)
 
 	// Here you will define your flags and configuration settings.
-
+	upCmd.Flags().StringVar(&genPath, "c", "", "is path for gen.yml")
 	newCmd.Flags().StringVar(&name, "name", "default", "file name")
 
-	exportCmd.Flags().StringVar(&dsn, "dsn", "", "数据库链接")
-	exportCmd.Flags().StringVar(&tableList, "tables", "", "表")
+	// exportCmd.Flags().StringVar(&dsn, "dsn", "", "数据库链接")
+	// exportCmd.Flags().StringVar(&tableList, "tables", "", "表")
 
 	upCmd.Flags().StringVar(&genPath, "c", "", "is path for gen.yml")
-	upCmd.Flags().StringVar(&dsn, "dsn", "", "consult[https://gorm.io/docs/connecting_to_the_database.html]")
-	upCmd.Flags().StringVar(&db, "db", "", "input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]")
-	upCmd.Flags().StringVar(&outPath, "outPath", DefaultOutPath, "specify a directory for output")
+	upCmd.Flags().StringVar(&sourceURL, "source", "", "consult[https://gorm.io/docs/connecting_to_the_database.html]")
+	upCmd.Flags().StringVar(&path, "path", defaultPath, "specify a directory for output")
+	upCmd.Flags().StringVar(&databaseURL, "db", "", "input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]")
 }

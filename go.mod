@@ -7,7 +7,6 @@ require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2
 	github.com/ethereum/go-ethereum v1.10.25
 	github.com/go-bamboo/pkg v0.0.20
-	github.com/go-kratos/kratos/v2 v2.5.2
 	github.com/go-mysql-org/go-mysql v1.6.0
 	github.com/imroc/req/v3 v3.25.0
 	github.com/machinebox/graphql v0.2.2
@@ -20,7 +19,6 @@ require (
 	golang.org/x/net v0.1.0
 	gopkg.in/telebot.v3 v3.1.2
 	gopkg.in/yaml.v3 v3.0.1
-	gorm.io/driver/sqlserver v1.4.1 // indirect
 	gorm.io/gen v0.3.18
 )
 
@@ -28,7 +26,10 @@ require (
 	github.com/fbsobreira/gotron-sdk v0.0.0-20211102183839-58a64f4da5f4 // indirect
 	github.com/go-bamboo/contrib v0.0.1
 	github.com/go-stack/stack v1.8.1 // indirect
+	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/matryer/is v1.4.0 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/tklauser/numcpus v0.5.0 // indirect
 )
+
+replace github.com/go-bamboo/pkg v0.0.20 => ../pkg
