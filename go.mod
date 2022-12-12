@@ -6,7 +6,7 @@ require (
 	gitee.com/teacherming/keygen v0.0.0-20220907143528-1ac51f8760ef
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2
 	github.com/ethereum/go-ethereum v1.10.25
-	github.com/go-bamboo/pkg v0.0.20
+	github.com/go-bamboo/pkg v0.0.23
 	github.com/go-mysql-org/go-mysql v1.6.0
 	github.com/imroc/req/v3 v3.25.0
 	github.com/machinebox/graphql v0.2.2
