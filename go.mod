@@ -31,5 +31,3 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/tklauser/numcpus v0.5.0 // indirect
 )
-
-replace github.com/go-bamboo/pkg v0.0.20 => ../pkg
