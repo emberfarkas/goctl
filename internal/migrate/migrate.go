@@ -132,7 +132,7 @@ var upCmd = &cobra.Command{
 		}
 		m, err := migrate.New(cmdParse.SourceURL, cmdParse.DatabaseURL)
 		defer func() {
-			if err != nil {
+			if err == nil {
 				if _, err := m.Close(); err != nil {
 					log.Error(err)
 				}
