@@ -24,6 +24,7 @@ require (
 
 require (
 	github.com/fbsobreira/gotron-sdk v0.0.0-20211102183839-58a64f4da5f4 // indirect
+	github.com/go-audio/wav v1.1.0
 	github.com/go-bamboo/contrib v0.0.1
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/golang-migrate/migrate/v4 v4.15.2
