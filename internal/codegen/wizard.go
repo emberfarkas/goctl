@@ -2,13 +2,14 @@ package codegen
 
 import (
 	"fmt"
-	"log"
 	"math/big"
 	"net"
 	"net/url"
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/go-bamboo/pkg/log"
 )
 
 type wizard struct {
@@ -73,7 +74,7 @@ func (w *wizard) readDefaultYesNo(prompt string, def bool) bool {
 		if text == "n" || text == "no" {
 			return false
 		}
-		log.Printf("Invalid input, expected 'y', 'yes', 'n', 'no' or empty")
+		log.Errorf("Invalid input, expected 'y', 'yes', 'n', 'no' or empty")
 	}
 }
 
@@ -88,7 +89,7 @@ func (w *wizard) readURL(prompt string) *url.URL {
 		}
 		uri, err := url.Parse(strings.TrimSpace(text))
 		if err != nil {
-			log.Printf("Invalid input, expected URL, err: %v", err)
+			log.Errorf("Invalid input, expected URL, err: %v", err)
 			continue
 		}
 		return uri
@@ -109,7 +110,7 @@ func (w *wizard) readInt(prompt string) int {
 		}
 		val, err := strconv.Atoi(strings.TrimSpace(text))
 		if err != nil {
-			log.Printf("Invalid input, expected integer, err: %v \n", err)
+			log.Errorf("Invalid input, expected integer, err: %v \n", err)
 			continue
 		}
 		return val
@@ -131,7 +132,7 @@ func (w *wizard) readDefaultInt(prompt string, def int) int {
 		}
 		val, err := strconv.Atoi(strings.TrimSpace(text))
 		if err != nil {
-			log.Printf("Invalid input, expected integer, err: %v\n", err)
+			log.Errorf("Invalid input, expected integer, err: %v\n", err)
 			continue
 		}
 		return val
@@ -153,7 +154,7 @@ func (w *wizard) readDefaultBigInt(prompt string, def *big.Int) *big.Int {
 		}
 		val, ok := new(big.Int).SetString(text, 0)
 		if !ok {
-			log.Printf("Invalid input, expected big integer")
+			log.Errorf("Invalid input, expected big integer")
 			continue
 		}
 		return val
@@ -197,7 +198,7 @@ func (w *wizard) readDefaultFloat(prompt string, def float64) float64 {
 		}
 		val, err := strconv.ParseFloat(strings.TrimSpace(text), 64)
 		if err != nil {
-			log.Printf("Invalid input, expected float", "err", err)
+			log.Errorf("Invalid input, expected float", "err", err)
 			continue
 		}
 		return val
@@ -299,7 +300,7 @@ func (w *wizard) readIPAddress(prompt string) string {
 		}
 		// Make sure it looks ok and return it if so
 		if ip := net.ParseIP(text); ip == nil {
-			log.Printf("Invalid IP address, please retry")
+			log.Infof("Invalid IP address, please retry")
 			continue
 		}
 		return text
