@@ -1,5 +1,7 @@
 # Tool
 
+[![Build Status](https://github.com/emberfarkas/goctl/workflows/Go/badge.svg?branch=main)](https://github.com/emberfarks/goctl/actions)
+
 ## 安装工具
 
 ``` bash
