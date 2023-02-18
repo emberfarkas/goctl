@@ -28,7 +28,7 @@ func New() (d Dao, err error) {
 
 func newDao() (d *dao, err error) {
 	db := gormx.MustNew(&gormx.Conf{
-		Driver:   "mysql",
+		Driver:   gormx.DBType_mysql,
 		Source:   dsn,
 		LogLevel: 3,
 	})

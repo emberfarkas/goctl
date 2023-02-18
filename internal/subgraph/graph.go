@@ -14,9 +14,8 @@ import (
 // Cmd represents the config command
 var (
 	Cmd = &cobra.Command{
-		Use:   "stat",
-		Short: "统计辅助工具",
-		Long:  `一些批处理proxy的工具`,
+		Use:  "subgraph",
+		Long: "统计subgraph辅助工具",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return run(cmd.Context())
 		},
@@ -31,10 +30,6 @@ const STT = "stt"
 func init() {
 
 	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// configCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	Cmd.Flags().StringVarP(&contract, "token", "t", "freetoken", "freetoke, stt")
 	Cmd.Flags().StringVarP(&out, "out", "o", "./Book1.xlsx", "freetoke, stt")

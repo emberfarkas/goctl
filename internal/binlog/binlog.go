@@ -48,19 +48,16 @@ func run(ctx context.Context) error {
 		e.Dump(&sb)
 		return nil
 	}
-
 	if err := p.ParseFile(input, offset, f); err != nil {
 		println(err.Error())
 		return err
 	}
-
 	fn, err := os.OpenFile(output, os.O_WRONLY|os.O_CREATE, 0)
 	if err != nil {
 		return err
 	}
 	defer fn.Close()
 	c := sb.String()
-	//fmt.Print(c)
 	_, err = fn.WriteString(c)
 	if err != nil {
 		return err

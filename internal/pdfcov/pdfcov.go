@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-bamboo/pkg/log"
 	"github.com/spf13/cobra"
 )
 
@@ -13,6 +14,8 @@ var Cmd = &cobra.Command{
 	Short: "pdfcov相关辅助工具",
 	Long:  `一些批处理pdfcov的工具`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		flags := cmd.PersistentFlags()
+		log.Debug(flags.GetString("config"))
 		return run(cmd.Context())
 	},
 }
@@ -23,13 +26,6 @@ func init() {
 
 	// Here you will define your flags and configuration settings.
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// configCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	Cmd.Flags().StringVar(&src, "src", "example.html", "html原文件")
 	Cmd.Flags().StringVar(&src, "out", "example.pdf", "pdf输出文件")
 }

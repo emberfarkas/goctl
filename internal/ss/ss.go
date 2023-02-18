@@ -9,9 +9,8 @@ import (
 
 // Cmd represents the config command
 var Cmd = &cobra.Command{
-	Use:   "proxy",
-	Short: "proxy相关辅助工具",
-	Long:  `一些批处理proxy的工具`,
+	Use:  "ss",
+	Long: `一些批处理proxy的工具`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return run(cmd.Context())
 	},

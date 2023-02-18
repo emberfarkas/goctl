@@ -152,15 +152,14 @@ var upCmd = &cobra.Command{
 
 func init() {
 	Cmd.AddCommand(newCmd, exportCmd, upCmd)
+	Cmd.PersistentFlags().StringVar(&genPath, "c", "", "is path for gen.yml")
 
 	// Here you will define your flags and configuration settings.
-	newCmd.Flags().StringVar(&genPath, "c", "", "is path for gen.yml")
 	newCmd.Flags().StringVar(&name, "name", "default", "file name")
 
 	// exportCmd.Flags().StringVar(&dsn, "dsn", "", "数据库链接")
 	// exportCmd.Flags().StringVar(&tableList, "tables", "", "表")
 
-	upCmd.Flags().StringVar(&genPath, "c", "", "is path for gen.yml")
 	upCmd.Flags().StringVar(&sourceURL, "source", "", "consult[https://gorm.io/docs/connecting_to_the_database.html]")
 	upCmd.Flags().StringVar(&path, "path", defaultPath, "specify a directory for output")
 	upCmd.Flags().StringVar(&databaseURL, "db", "", "input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]")

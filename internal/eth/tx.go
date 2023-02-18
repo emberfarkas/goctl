@@ -38,7 +38,7 @@ func getTx(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	tx, _, err := rpc.TransactionByHash(context.TODO(), common.HexToHash(hash))
+	tx, _, err := rpc.TransactionByHash(ctx, common.HexToHash(hash))
 	if err != nil {
 		return err
 	}
