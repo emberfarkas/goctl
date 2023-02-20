@@ -13,6 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/go-bamboo/pkg/log"
 	"github.com/spf13/cobra"
+	"github.com/tidwall/sjson"
 )
 
 // 这个工具主要用来测试eth相关的借口
@@ -38,9 +39,10 @@ func init() {
 }
 
 func getTx(ctx context.Context) error {
-	hash = "0xb5519dc9333aaed59898de7093946dc22c69f240a40c5625e67c02b12749c85c"
-	log.Infof("hash: %v", hash)
-	rpc, err := ethclient.Dial("https://bsc-dataseed4.ninicoin.io")
+	//bsc := "https://bsc-dataseed4.ninicoin.io"
+	eth := "https://ethereum.blockpi.network/v1/rpc/public"
+	hash = "0x75a42f240d229518979199f56cd7c82e4fc1f1a20ad9a4864c635354b4a34261"
+	rpc, err := ethclient.Dial(eth)
 	if err != nil {
 		return err
 	}
@@ -48,13 +50,84 @@ func getTx(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	log.Debugf("from: %v", tx.To())
-	log.Debugf("to: %v", tx.To)
+	v, r, s := tx.RawSignatureValues()
+	log.Debugf("v[%v], r[%v], s[%v]", v, r, s)
 	return nil
 }
 
 func transfer(ctx context.Context) (err error) {
 	client, err := ethclient.Dial("https://endpoints.omniatech.io/v1/bsc/testnet/public")
+	if err != nil {
+		return err
+	}
+	chainID, err := client.ChainID(ctx)
+	if err != nil {
+		return
+	}
+	log.Infof("chainID[%v]", chainID)
+	privKey, err := crypto.HexToECDSA("c0247b7f40e5c29a405eafbd8316c7d7ff904fbf04fc95704debcdd9214bc8e2")
+	if err != nil {
+		return err
+	}
+	pubKey := privKey.Public()
+	pubKeyECDSA, ok := pubKey.(*ecdsa.PublicKey)
+	if !ok {
+		return errors.New("invalid key")
+	}
+	from := crypto.PubkeyToAddress(*pubKeyECDSA)
+	no, err := client.NonceAt(ctx, from, nil)
+	if err != nil {
+		return
+	}
+	log.Infof("nonce: %v\n", no)
+
+	gasPrice, err := client.SuggestGasPrice(ctx)
+	if err != nil {
+		return
+	}
+	tokenAddress := common.HexToAddress("0x62AB07f83cc62f4bf940D0330f6019588Deed13e")
+	value := big.NewInt(int64(math.Pow10(18) * 0.001))
+	data := []byte("")
+	tx := types.NewTransaction(no, tokenAddress, value, 21000, gasPrice, data)
+	signer := types.NewEIP155Signer(chainID)
+	signedTx97, err := types.SignTx(tx, signer, privKey)
+	if err != nil {
+		return
+	}
+	signedTx97.MarshalJSON()
+	v, r, s := signedTx97.RawSignatureValues()
+	log.Debugf("hash: %v, v[%v], r[%v], s[%v]", signedTx97.Hash(), v, r, s)
+
+	txBytes, err := signedTx97.MarshalJSON()
+	if err != nil {
+		return err
+	}
+	txBytes, err = sjson.SetBytes(txBytes, "v", "0x1c")
+	if err != nil {
+		return err
+	}
+	var signedTx97Ex types.Transaction
+	if err := signedTx97Ex.UnmarshalJSON(txBytes); err != nil {
+		return err
+	}
+	err = client.SendTransaction(ctx, &signedTx97Ex)
+	if err != nil {
+		return
+	}
+	//tx, _, err := client.TransactionByHash(ctx, common.HexToHash("0x4787f538e43fa0b08849dd958a101dcb5b91200c9169cced33b6ead16d5fc507"))
+	//if err != nil {
+	//	return err
+	//}
+	//var rs rlp.Stream
+	//if err := tx.DecodeRLP(&rs); err != nil {
+	//	return err
+	//}
+
+	return
+}
+
+func replay(ctx context.Context) (err error) {
+	client, err := ethclient.Dial("https://exchaintestrpc.okex.org")
 	if err != nil {
 		return err
 	}
@@ -79,22 +152,5 @@ func transfer(ctx context.Context) (err error) {
 	}
 	log.Infof("nonce: %v\n", no)
 
-	gasPrice, err := client.SuggestGasPrice(ctx)
-	if err != nil {
-		return
-	}
-	tokenAddress := common.HexToAddress("0x62AB07f83cc62f4bf940D0330f6019588Deed13e")
-	value := big.NewInt(int64(math.Pow10(18) * 0.001))
-	data := []byte("")
-	tx := types.NewTransaction(uint64(no), tokenAddress, value, 21000, gasPrice, data)
-	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), privKey)
-	if err != nil {
-		return
-	}
-	log.Debugf("hash: %v", signedTx.Hash())
-	err = client.SendTransaction(ctx, signedTx)
-	if err != nil {
-		return
-	}
-	return
+	return nil
 }
