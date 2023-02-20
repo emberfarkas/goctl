@@ -44,5 +44,6 @@ func getTx(ctx context.Context) error {
 	}
 	log.Debugf("from: %v", tx.To())
 	log.Debugf("to: %v", tx.To)
+
 	return nil
 }

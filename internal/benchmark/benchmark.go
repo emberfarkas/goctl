@@ -3,16 +3,15 @@ package benchmark
 import (
 	"context"
 	"errors"
-	"fmt"
 	"os"
 	"os/signal"
-	"runtime"
 	"sync"
 	"syscall"
 	"time"
 
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/go-bamboo/pkg/log"
+	"github.com/go-bamboo/pkg/rescue"
 	"github.com/spf13/cobra"
 )
 
@@ -63,14 +62,6 @@ var (
 func init() {
 
 	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// configCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	Cmd.Flags().StringVarP(&url, "url", "u", "", "url")
 	Cmd.Flags().StringVarP(&mint, "mint", "m", "mint", "标记")
 	Cmd.Flags().StringVar(&from, "from", "", "有钱地址")
@@ -92,17 +83,10 @@ func run(ctx context.Context) error {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func(ctx context.Context) {
-		defer func() {
+		rescue.Recover(func() {
 			wg.Done()
 			log.Info("run done")
-			if err := recover(); err != nil {
-				const size = 64 << 10
-				buf := make([]byte, size)
-				buf = buf[:runtime.Stack(buf, false)]
-				pl := fmt.Sprintf("run call panic: %v\n%s\n", err, buf)
-				log.Error("%s", pl)
-			}
-		}()
+		})
 		if err := uc.run(ctx); err != nil {
 			log.Errorf("err: %v", err)
 		}

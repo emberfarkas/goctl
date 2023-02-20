@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"fmt"
-	"log"
 	"math"
 	"math/big"
 	"runtime"
@@ -22,6 +21,7 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/go-bamboo/contrib/contracts/flattened"
+	"github.com/go-bamboo/pkg/log"
 	"github.com/go-bamboo/pkg/tools"
 	"github.com/sony/sonyflake"
 	"github.com/syndtr/goleveldb/leveldb"
@@ -102,7 +102,7 @@ func (uc *biz) FlushNonce(ctx context.Context) (err error) {
 		k := []byte(key.(string))
 		v := []byte(fmt.Sprint(value))
 		if err = uc.db.Put(k, v, nil); err != nil {
-			log.Printf("err : %v", err)
+			log.Errorf("err : %v", err)
 		}
 		return true
 	})
@@ -185,7 +185,7 @@ func (uc *biz) contractsMint(ctx context.Context, wg *sync.WaitGroup, from accou
 			buf := make([]byte, size)
 			buf = buf[:runtime.Stack(buf, false)]
 			pl := fmt.Sprintf("ContractsMint call panic: %v\n%s\n", err, buf)
-			log.Printf("%s", pl)
+			log.Errorf("%s", pl)
 		}
 	}()
 	nonce, _ := uc.GetNonce(ctx, "ETH", from.Address.Hex())
@@ -197,18 +197,18 @@ func (uc *biz) contractsMint(ctx context.Context, wg *sync.WaitGroup, from accou
 		c := pool.Get().(*ethclient.Client)
 		media, err := flattened.NewMedia(ctrctAddr, c)
 		if err != nil {
-			log.Printf("err: %v", err)
+			log.Errorf("err: %v", err)
 			return
 		}
 		hash, rawTx, err := media.MintKs(ctx, big.NewInt(int64(chainID)), uc.ks, from, big.NewInt(nonce), big.NewInt(int64(tokenId)), tokenURI, contentHash)
 		pool.Put(c)
 		if err != nil {
-			log.Printf("err: %v", err)
+			log.Errorf("err: %v", err)
 			return
 		}
 
 		if _, ok := uc.hashs.Load(hash); ok {
-			log.Printf("err: 已经存在%v", hash)
+			log.Errorf("err: 已经存在%v", hash)
 			return
 		}
 		uc.hashs.Store(hash, rawTx)
@@ -217,7 +217,7 @@ func (uc *biz) contractsMint(ctx context.Context, wg *sync.WaitGroup, from accou
 
 		nonce = nonce + 1
 		if err = uc.SetNonce(ctx, "ETH", from.Address.Hex(), nonce); err != nil {
-			log.Printf("err: %v", err)
+			log.Errorf("err: %v", err)
 			return
 		}
 	}
@@ -232,7 +232,7 @@ func (uc *biz) post(ctx context.Context, wg *sync.WaitGroup, ch chan string) {
 			buf := make([]byte, size)
 			buf = buf[:runtime.Stack(buf, false)]
 			pl := fmt.Sprintf("Post call panic: %v\n%s\n", err, buf)
-			log.Printf("%s", pl)
+			log.Errorf("%s", pl)
 		}
 	}()
 	for {
@@ -245,18 +245,18 @@ func (uc *biz) post(ctx context.Context, wg *sync.WaitGroup, ch chan string) {
 				hash, _, err := client.TransactionByHash(context.TODO(), common.HexToHash(rawTx))
 				rpcpool.Put(client)
 				if err != nil {
-					log.Printf("3. warn: %v", err)
+					log.Errorf("3. warn: %v", err)
 					continue
 				}
 				if _, ok := uc.hashs.Load(hash); ok {
-					log.Printf("4. err: 已经存在%v", hash)
+					log.Errorf("4. err: 已经存在%v", hash)
 					return
 				}
 				uc.hashs.Store(hash, rawTx)
 				uc.hashx.Store(hash, 0)
 				atomic.AddInt32(&uc.stat.send, 1)
 			} else {
-				log.Printf("err: 发现空hash")
+				log.Errorf("err: 发现空hash")
 			}
 		default:
 		}
@@ -272,7 +272,7 @@ func (uc *biz) transfer(ctx context.Context, wg *sync.WaitGroup, from common.Add
 			buf := make([]byte, size)
 			buf = buf[:runtime.Stack(buf, false)]
 			pl := fmt.Sprintf("Transfer call panic: %v\n%s\n", err, buf)
-			log.Printf("%s", pl)
+			log.Errorf("%s", pl)
 		}
 	}()
 	nonce, _ := uc.GetNonce(ctx, "ETH", from.Hex())
@@ -313,7 +313,7 @@ func (uc *biz) transfer(ctx context.Context, wg *sync.WaitGroup, from common.Add
 		tx := types.NewTransaction(uint64(nonce), to, big.NewInt(v), 2300000, big.NewInt(1), []byte(hex))
 		signedTx, err := types.SignTx(tx, types.NewEIP155Signer(big.NewInt(int64(chainID))), priv)
 		if err != nil {
-			log.Printf("1. err: %v", err)
+			log.Errorf("1. err: %v", err)
 			return
 		}
 		data, err := rlp.EncodeToBytes(signedTx)
@@ -324,7 +324,7 @@ func (uc *biz) transfer(ctx context.Context, wg *sync.WaitGroup, from common.Add
 		ch <- rawTx
 		nonce = nonce + 1
 		if err = uc.SetNonce(ctx, "ETH", from.Hex(), nonce); err != nil {
-			log.Printf("5. err: %v", err)
+			log.Errorf("5. err: %v", err)
 			return
 		}
 	}
@@ -339,7 +339,7 @@ func (uc *biz) transferV(ctx context.Context, wg *sync.WaitGroup, from accounts.
 			buf := make([]byte, size)
 			buf = buf[:runtime.Stack(buf, false)]
 			pl := fmt.Sprintf("transferV call panic: %v\n%s\n", err, buf)
-			log.Printf("%s", pl)
+			log.Errorf("%s", pl)
 		}
 	}()
 	nonce, _ := uc.GetNonce(ctx, "ETH", from.Address.Hex())
@@ -375,7 +375,7 @@ func (uc *biz) transferV(ctx context.Context, wg *sync.WaitGroup, from accounts.
 		tx := types.NewTransaction(uint64(nonce), to.Address, big.NewInt(v), 23000000, big.NewInt(1), []byte(hex))
 		signedTx, err := uc.ks.SignTx(from, tx, big.NewInt(int64(chainID)))
 		if err != nil {
-			log.Printf("err: %v", err)
+			log.Errorf("err: %v", err)
 			return
 		}
 		data, err := rlp.EncodeToBytes(signedTx)
@@ -386,7 +386,7 @@ func (uc *biz) transferV(ctx context.Context, wg *sync.WaitGroup, from accounts.
 		ch <- rawTx
 		nonce = nonce + 1
 		if err = uc.SetNonce(ctx, "ETH", from.Address.Hex(), nonce); err != nil {
-			log.Printf("err: %v", err)
+			log.Errorf("err: %v", err)
 			return
 		}
 	}
@@ -410,7 +410,7 @@ func (uc *biz) runTest(ctx context.Context) error {
 	no, err := client.NonceAt(context.TODO(), fromAddr, nil)
 	rpcpool.Put(client)
 	if err != nil {
-		log.Printf("err: %v", err)
+		log.Errorf("err: %v", err)
 		return err
 	}
 
@@ -442,7 +442,7 @@ func (uc *biz) runTest(ctx context.Context) error {
 	pCancel()
 	pwg.Wait()
 	cost := time.Since(start)
-	log.Printf("send: %v, cost : %vs", 1*n, cost.Seconds())
+	log.Errorf("send: %v, cost : %vs", 1*n, cost.Seconds())
 	return nil
 }
 
@@ -463,12 +463,12 @@ func (uc *biz) runTest1(ctx context.Context) error {
 	no, err := client.NonceAt(context.TODO(), fromAddr, nil)
 	rpcpool.Put(client)
 	if err != nil {
-		log.Printf("err: %v", err)
+		log.Errorf("err: %v", err)
 		return err
 	}
 	nonce, err := uc.GetNonce(ctx, "ETH", fromAddr.Hex())
 	if err != nil {
-		log.Printf("err : %v", err)
+		log.Errorf("err : %v", err)
 		return err
 	}
 	if nonce < int64(no) {
@@ -492,7 +492,7 @@ func (uc *biz) runTest1(ctx context.Context) error {
 	for {
 		select {
 		case <-ctx.Done():
-			log.Printf("runTest1 done")
+			log.Errorf("runTest1 done")
 			goto handlePost
 		case <-ti.C:
 			// log.Printf("---------------------run 1 sec")
@@ -547,12 +547,12 @@ func (uc *biz) runTest2(ctx context.Context) error {
 	no, err := client.NonceAt(context.TODO(), fromAddr, nil)
 	rpcpool.Put(client)
 	if err != nil {
-		log.Printf("err: %v", err)
+		log.Errorf("err: %v", err)
 		return err
 	}
 	nonce, err := uc.GetNonce(ctx, "ETH", fromAddr.Hex())
 	if err != nil {
-		log.Printf("err : %v", err)
+		log.Errorf("err : %v", err)
 		return err
 	}
 	if nonce < int64(no) {
@@ -620,7 +620,7 @@ func (uc *biz) runMint(ctx context.Context) error {
 	}
 	wg.Wait()
 	cost := time.Since(start)
-	log.Printf("send: %v cost : %vs", len(mp)*n, cost.Seconds())
+	log.Infof("send: %v cost : %vs", len(mp)*n, cost.Seconds())
 	return nil
 }
 
@@ -641,12 +641,12 @@ func (uc *biz) runInitV(ctx context.Context) error {
 	no, err := client.NonceAt(context.TODO(), fromAddr, nil)
 	rpcpool.Put(client)
 	if err != nil {
-		log.Printf("err: %v", err)
+		log.Errorf("err: %v", err)
 		return err
 	}
 	nonce, err := uc.GetNonce(ctx, "ETH", fromAddr.Hex())
 	if err != nil {
-		log.Printf("err : %v", err)
+		log.Errorf("err : %v", err)
 		return err
 	}
 	if nonce < int64(no) {
@@ -675,7 +675,7 @@ func (uc *biz) runInitV(ctx context.Context) error {
 	pCancel()
 	pwg.Wait()
 	cost := time.Since(start)
-	log.Printf("send: %v cost : %vs", len(mp)*n, cost.Seconds())
+	log.Infof("send: %v cost : %vs", len(mp)*n, cost.Seconds())
 	return nil
 }
 
@@ -695,7 +695,7 @@ func (uc *biz) runTransV(ctx context.Context) error {
 	for i := 0; i < len(mp); i++ {
 		from := mp[i]
 		if err := uc.ks.Unlock(from, "123456"); err != nil {
-			log.Printf("err : %v", err)
+			log.Infof("err : %v", err)
 			return err
 		}
 
@@ -708,7 +708,7 @@ func (uc *biz) runTransV(ctx context.Context) error {
 		}
 		nonce, err := uc.GetNonce(ctx, "ETH", from.Address.Hex())
 		if err != nil {
-			log.Printf("err : %v", err)
+			log.Infof("err : %v", err)
 			return err
 		}
 		if nonce < int64(no) {
@@ -734,7 +734,7 @@ func (uc *biz) runTransV(ctx context.Context) error {
 	pCancel()
 	pwg.Wait()
 	cost := time.Since(start)
-	log.Printf("send: %v cost : %vs", len(mp)*n, cost.Seconds())
+	log.Infof("send: %v cost : %vs", len(mp)*n, cost.Seconds())
 	return nil
 }
 
@@ -747,7 +747,7 @@ func (uc *biz) showResult(ctx context.Context) error {
 		uc.hashs.Range(func(key, value interface{}) bool {
 			state, ok := uc.hashx.Load(key)
 			if !ok {
-				log.Printf("不存在: %v", key)
+				log.Infof("不存在: %v", key)
 				return true
 			}
 			switch state {
@@ -755,7 +755,7 @@ func (uc *biz) showResult(ctx context.Context) error {
 				// test
 				receipt, err := client.TransactionReceipt(context.TODO(), common.HexToHash(key.(string)))
 				if err != nil {
-					log.Printf("err: %v", err)
+					log.Errorf("err: %v", err)
 					return true
 				}
 				if receipt.Status == 1 {
@@ -765,20 +765,20 @@ func (uc *biz) showResult(ctx context.Context) error {
 					// 成功后，测试数据
 					tx, _, err := client.TransactionByHash(context.TODO(), common.HexToHash(key.(string)))
 					if err != nil {
-						log.Printf("err: %v", err)
+						log.Errorf("err: %v", err)
 						return true
 					}
 					input, err := hexutil.Decode(string(tx.Data()))
 					if err != nil {
-						log.Printf("err: %v", err)
+						log.Errorf("err: %v", err)
 						return true
 					}
 					str, err := hexutil.Decode(string(input))
 					if err != nil {
-						log.Printf("err: %v", err)
+						log.Errorf("err: %v", err)
 						return true
 					}
-					log.Printf("input data : %v", string(str))
+					log.Infof("input data : %v", string(str))
 				} else if receipt.Status == 0 {
 					atomic.AddInt32(&uc.stat.fail, 1)
 					uc.hashx.Store(key, 2)
@@ -795,7 +795,7 @@ func (uc *biz) showResult(ctx context.Context) error {
 			return true
 		})
 		cost := time.Since(start)
-		log.Printf("query: %vs, send: %v, success: %v, fail : %v, sleep 1 sec", cost.Seconds(), uc.stat.send, uc.stat.success, uc.stat.fail)
+		log.Infof("query: %vs, send: %v, success: %v, fail : %v, sleep 1 sec", cost.Seconds(), uc.stat.send, uc.stat.success, uc.stat.fail)
 		time.Sleep(1 * time.Second)
 	}
 	return nil
@@ -843,14 +843,14 @@ func (uc *biz) run(ctx context.Context) error {
 
 	// flush
 	if err := uc.FlushNonce(ctx); err != nil {
-		log.Printf("err :%v", err)
+		log.Errorf("err :%v", err)
 		return err
 	}
 
 	// 显示最后的查询结果
 	if show == 1 {
 		if err := uc.showResult(ctx); err != nil {
-			log.Printf("err :%v", err)
+			log.Errorf("err :%v", err)
 			return err
 		}
 	}

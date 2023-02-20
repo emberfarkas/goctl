@@ -40,12 +40,10 @@ func run1(ctx context.Context) error {
 	}
 
 	var chatId tele.Recipient = tele.ChatID(-793294586)
-
 	b, err := tele.NewBot(pref)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	go func() {
 		// b.Send())
 		for i := 0; i < 100; i++ {
@@ -57,7 +55,6 @@ func run1(ctx context.Context) error {
 			}
 		}
 	}()
-
 	b.Handle("/hello", func(c tele.Context) error {
 		return c.Send("Hello!")
 	})
