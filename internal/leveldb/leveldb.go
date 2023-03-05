@@ -2,7 +2,6 @@ package leveldb
 
 import (
 	"context"
-
 	"github.com/go-bamboo/pkg/log"
 	"github.com/spf13/cobra"
 	"github.com/syndtr/goleveldb/leveldb"
@@ -22,18 +21,20 @@ var Cmd = &cobra.Command{
 func run(ctx context.Context) error {
 	// 恢复不了metamask数据
 	opts := &opt.Options{}
-	db, err := leveldb.OpenFile("D:/dev/extensions1/D", opts)
+	db, err := leveldb.OpenFile("./data", opts)
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
-
-	var stats leveldb.DBStats
-	if err = db.Stats(&stats); err != nil {
-		panic(err)
+	iter := db.NewIterator(nil, nil)
+	for iter.Next() {
+		key := iter.Key()
+		value := iter.Value()
+		log.Debugf("key: %v, value: %v", string(key), string(value))
 	}
-
-	log.Info("level size:", stats.LevelSizes, len(stats.LevelSizes))
-	log.Info("level tables counts:", stats.LevelTablesCounts, len(stats.LevelDurations))
+	iter.Release()
+	if err := iter.Error(); err != nil {
+		log.Error(err)
+	}
 	return nil
 }

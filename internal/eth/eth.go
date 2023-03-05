@@ -16,4 +16,5 @@ var (
 func init() {
 	Cmd.AddCommand(txCmd)
 	Cmd.AddCommand(codeCmd)
+	Cmd.AddCommand(adornCmd)
 }

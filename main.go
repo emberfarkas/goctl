@@ -10,6 +10,7 @@ import (
 	"github.com/emberfarkas/goctl/internal/diff"
 	"github.com/emberfarkas/goctl/internal/eth"
 	"github.com/emberfarkas/goctl/internal/gormgen"
+	"github.com/emberfarkas/goctl/internal/leveldb"
 	"github.com/emberfarkas/goctl/internal/migrate"
 	"github.com/emberfarkas/goctl/internal/pdfcov"
 	"github.com/emberfarkas/goctl/internal/ss"
@@ -47,6 +48,7 @@ func init() {
 	rootCmd.AddCommand(telegram.Cmd)
 	rootCmd.AddCommand(gormgen.Cmd)
 	rootCmd.AddCommand(diff.Cmd)
+	rootCmd.AddCommand(leveldb.Cmd)
 }
 
 func main() {

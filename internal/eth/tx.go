@@ -25,7 +25,7 @@ var (
 		Short: "tx相关",
 		Long:  `获取交易详情`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return transfer(cmd.Context())
+			return getTx(cmd.Context())
 		},
 	}
 	hash string // 交易hash
@@ -41,7 +41,7 @@ func init() {
 func getTx(ctx context.Context) error {
 	//bsc := "https://bsc-dataseed4.ninicoin.io"
 	eth := "https://ethereum.blockpi.network/v1/rpc/public"
-	hash = "0x75a42f240d229518979199f56cd7c82e4fc1f1a20ad9a4864c635354b4a34261"
+	hash = "0x64dff047841b2138a9f5200ce319d50fb37aec1ef8489ef34fa577de461d642d"
 	rpc, err := ethclient.Dial(eth)
 	if err != nil {
 		return err
@@ -50,6 +50,7 @@ func getTx(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	log.Debugf("%v", tx.To())
 	v, r, s := tx.RawSignatureValues()
 	log.Debugf("v[%v], r[%v], s[%v]", v, r, s)
 	return nil
