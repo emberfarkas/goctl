@@ -2,10 +2,16 @@
 
 [![Build Status](https://github.com/emberfarkas/goctl/workflows/Go/badge.svg?branch=main)](https://github.com/emberfarks/goctl/actions)
 
-## 安装工具
+## 依赖工具
 
 ``` bash
 go install github.com/UnnoTed/fileb0x@latest
+```
+
+## 安装工具
+
+``` bash
+go install github.com/emberfarkas/goctl@latest
 ```
 
 ## 项目简介

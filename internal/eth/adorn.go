@@ -3,15 +3,16 @@ package eth
 import (
 	"context"
 	"fmt"
-	"math/big"
-
 	"github.com/emberfarkas/goctl/internal/eth/adorn"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/go-bamboo/pkg/log"
+	"github.com/go-bamboo/pkg/store/gormx"
 	"github.com/spf13/cobra"
 	"github.com/xuri/excelize/v2"
+	"math"
+	"math/big"
 )
 
 // 这个工具主要用来测试eth相关的借口
@@ -51,11 +52,16 @@ func getAdorn(ctx context.Context) error {
 	log.Infof("-------------------")
 	inst, err := adorn.NewErc1155(common.HexToAddress("0x2DFEb752222ccceCB9BC0a934b02C3A86f633900"), rpc)
 
-	// 26171426
+	//block, err := rpc.BlockByNumber(context.TODO(), nil)
+	//if err != nil {
+	//	return err
+	//}
+
+	// 27400740
 	step := int64(10000)
-	for i := int64(22388143); i < 26171426; {
+	for i := int64(22388143); i < 26129270; {
 		log.Debugf("from: %v, to: %v", i, i+step)
-		end := uint64(i + step)
+		end := uint64(math.Min(float64(i+step), 27400740))
 		iter1, err := inst.FilterTransferSingle(&bind.FilterOpts{
 			Start: uint64(i),
 			End:   &end,
@@ -83,7 +89,7 @@ func getAdorn(ctx context.Context) error {
 		}
 		i = i + step
 	}
-	return saveXlsx()
+	return saveDB()
 }
 
 func saveAccountSingle(single *adorn.Erc1155TransferSingle) error {
@@ -137,6 +143,47 @@ func addTo(to common.Address, id *big.Int, value *big.Int) error {
 	}
 	val1 = big.NewInt(0).Add(val1, value)
 	d[id.String()] = val1
+	return nil
+}
+
+const TableNameMevContract = "tb_adorn"
+
+// TbAdorn mapped from table <tb_adorn>
+type TbAdorn struct {
+	ID      int64  `gorm:"column:id;primaryKey" json:"id"`
+	Address string `gorm:"column:address;not null" json:"address"`
+	TokenID string `gorm:"column:token_id;not null" json:"token_id"`
+	Balance int64  `gorm:"column:balance;not null" json:"balance"`
+}
+
+// TableName MevContract's table name
+func (*TbAdorn) TableName() string {
+	return TableNameMevContract
+}
+
+func saveDB() error {
+	db := gormx.MustNew(&gormx.Conf{
+		Driver: gormx.DBType_sqlite,
+		Source: "./data/adorn.db",
+	})
+	if err := db.Migrator().AutoMigrate(&TbAdorn{}); err != nil {
+		return err
+	}
+	id := 1
+	for key, val := range accounts {
+		for s, b := range val {
+			d := &TbAdorn{
+				ID:      int64(id),
+				Address: key,
+				TokenID: s,
+				Balance: b.Int64(),
+			}
+			if err := db.Create(d).Error; err != nil {
+				return err
+			}
+			id = id + 1
+		}
+	}
 	return nil
 }
 

@@ -32,4 +32,5 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/tidwall/sjson v1.2.5
 	github.com/tklauser/numcpus v0.5.0 // indirect
+	gorm.io/gorm v1.24.1
 )
