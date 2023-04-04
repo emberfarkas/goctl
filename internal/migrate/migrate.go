@@ -127,6 +127,9 @@ var upCmd = &cobra.Command{
 		if sourceURL == "" && path != "" {
 			cmdParse.SourceURL = path
 		}
+		if cmdParse.SourceURL == "" {
+			cmdParse.SourceURL = defaultPath
+		}
 		if databaseURL != "" {
 			cmdParse.DatabaseURL = databaseURL
 		}
@@ -161,6 +164,6 @@ func init() {
 	// exportCmd.Flags().StringVar(&tableList, "tables", "", "表")
 
 	upCmd.Flags().StringVar(&sourceURL, "source", "", "consult[https://gorm.io/docs/connecting_to_the_database.html]")
-	upCmd.Flags().StringVar(&path, "path", defaultPath, "specify a directory for output")
+	upCmd.Flags().StringVar(&path, "path", "", "specify a directory for output")
 	upCmd.Flags().StringVar(&databaseURL, "db", "", "input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]")
 }
