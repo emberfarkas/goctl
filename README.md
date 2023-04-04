@@ -1,6 +1,6 @@
 # Tool
 
-[![Build Status](https://github.com/emberfarkas/goctl/workflows/Go/badge.svg?branch=main)](https://github.com/emberfarks/goctl/actions)
+[![Build Status](https://github.com/emberfarkas/goctl/workflows/go.yml/badge.svg?branch=main)](https://github.com/emberfarks/goctl/actions)
 
 ## 依赖工具
 
