@@ -1,6 +1,4 @@
-
-
-[![Build Status](https://github.com/emberfarkas/goctl/workflows/go.yml/badge.svg)](https://github.com/emberfarks/goctl/actions)
+![deployed](https://github.com/emberfarkas/goctl/actions/workflows/go.yml/badge.svg)
 
 # goctl
 
