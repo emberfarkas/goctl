@@ -27,12 +27,12 @@ jobs:
     - name: Build
       run: make build
 
-    - name: Deploy to Ec2 lifeform7
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.PROD_LF_HOST }}
-        username: ubuntu
-        key: ${{ secrets.DEV_SERVER_PRIVATE_KEY }}
-        passphrase: ${{ secrets.DEV_SERVER_PASSPHRASE }}
-        source: "goctl"
-        target: "goctl"
+#    - name: Deploy to Ec2 lifeform7
+#      uses: appleboy/scp-action@master
+#      with:
+#        host: ${{ secrets.PROD_LF_HOST }}
+#        username: ubuntu
+#        key: ${{ secrets.DEV_SERVER_PRIVATE_KEY }}
+#        passphrase: ${{ secrets.DEV_SERVER_PASSPHRASE }}
+#        source: "goctl"
+#        target: "goctl"
