@@ -8,7 +8,7 @@ require (
 	github.com/ethereum/go-ethereum v1.10.25
 	github.com/go-bamboo/pkg v0.0.28-0.20230217035102-ce5dc6664069
 	github.com/go-mysql-org/go-mysql v1.6.0
-	github.com/imroc/req/v3 v3.25.0
+	github.com/imroc/req/v3 v3.34.0
 	github.com/machinebox/graphql v0.2.2
 	github.com/peterh/liner v1.2.2
 	github.com/sony/sonyflake v1.1.0
@@ -16,7 +16,7 @@ require (
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/xuri/excelize/v2 v2.6.1
-	golang.org/x/net v0.4.0
+	golang.org/x/net v0.9.0
 	gopkg.in/telebot.v3 v3.1.2
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/gen v0.3.18
@@ -32,5 +32,4 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/tidwall/sjson v1.2.5
 	github.com/tklauser/numcpus v0.5.0 // indirect
-	gorm.io/gorm v1.24.1
 )
