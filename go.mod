@@ -6,7 +6,7 @@ require (
 	gitee.com/teacherming/keygen v0.0.0-20220907143528-1ac51f8760ef
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2
 	github.com/ethereum/go-ethereum v1.10.25
-	github.com/go-bamboo/pkg v0.0.28-0.20230217035102-ce5dc6664069
+	github.com/go-bamboo/pkg v0.0.34-0.20230525082211-af443161d0e2
 	github.com/go-mysql-org/go-mysql v1.6.0
 	github.com/imroc/req/v3 v3.34.0
 	github.com/machinebox/graphql v0.2.2
@@ -25,11 +25,13 @@ require (
 require (
 	github.com/fbsobreira/gotron-sdk v0.0.0-20211102183839-58a64f4da5f4 // indirect
 	github.com/go-audio/wav v1.1.0
-	github.com/go-bamboo/contrib v0.0.1
+	github.com/go-bamboo/contrib v0.0.14-0.20230525034658-fd52460f294d
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/matryer/is v1.4.0 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
+	github.com/tidwall/gjson v1.14.3
 	github.com/tidwall/sjson v1.2.5
 	github.com/tklauser/numcpus v0.5.0 // indirect
+	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 )

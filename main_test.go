@@ -19,3 +19,7 @@ func TestInt(t *testing.T) {
 	n := fmt.Sprintf("%.4f", float64(11000)/float64(10000))
 	t.Errorf("%v", n) // 1.1000
 }
+
+func TestInt1(t *testing.T) {
+
+}
