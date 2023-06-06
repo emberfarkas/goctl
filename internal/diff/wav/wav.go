@@ -1,9 +1,10 @@
-package diff
+package wav
 
 import (
 	"context"
 	"os"
 
+	"github.com/emberfarkas/goctl/internal/diff/clap"
 	"github.com/go-audio/wav"
 	"github.com/go-bamboo/pkg/log"
 	"github.com/spf13/cobra"
@@ -11,7 +12,7 @@ import (
 
 // Cmd represents the config command
 var (
-	wavCmd = &cobra.Command{
+	Cmd = &cobra.Command{
 		Use:   "wav",
 		Short: "wav相关",
 		Long:  `比较wav文件不同详情`,
@@ -19,20 +20,10 @@ var (
 			return diffWAV(cmd.Context())
 		},
 	}
-	src string // 参数
-	dst string // to
 )
 
-func init() {
-
-	// Here you will define your flags and configuration settings.
-
-	wavCmd.Flags().StringVar(&src, "src", "", "对比者")
-	wavCmd.Flags().StringVar(&dst, "dst", "", "被对比者")
-}
-
 func diffWAV(ctx context.Context) error {
-	f1, err := os.Open(src)
+	f1, err := os.Open(clap.Src)
 	if err != nil {
 		return err
 	}
@@ -40,7 +31,7 @@ func diffWAV(ctx context.Context) error {
 	d1.ReadMetadata()
 	log.Debugw("src", "NumChans", d1.NumChans, "BitDepth", d1.BitDepth, "SampleRate", d1.SampleRate, "WavAudioFormat", d1.WavAudioFormat, "AvgBytesPerSec", d1.AvgBytesPerSec)
 
-	f2, err := os.Open(dst)
+	f2, err := os.Open(clap.Dst)
 	if err != nil {
 		return err
 	}

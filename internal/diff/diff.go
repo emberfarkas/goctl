@@ -1,6 +1,10 @@
 package diff
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/emberfarkas/goctl/internal/diff/clap"
+	"github.com/emberfarkas/goctl/internal/diff/wav"
+	"github.com/spf13/cobra"
+)
 
 // 这个工具主要用来对比wav文件
 
@@ -14,5 +18,8 @@ var (
 )
 
 func init() {
-	Cmd.AddCommand(wavCmd)
+	Cmd.AddCommand(wav.Cmd)
+	// Here you will define your flags and configuration settings.
+	Cmd.PersistentFlags().StringVar(&clap.Src, "src", "", "对比者")
+	Cmd.PersistentFlags().StringVar(&clap.Src, "dst", "", "被对比者")
 }
