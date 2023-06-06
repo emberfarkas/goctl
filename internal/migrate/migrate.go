@@ -5,6 +5,7 @@ import (
 	"github.com/emberfarkas/goctl/internal/migrate/new"
 	"github.com/emberfarkas/goctl/internal/migrate/up"
 
+	_ "github.com/ClickHouse/clickhouse-go"
 	_ "github.com/golang-migrate/migrate/v4/database"
 	_ "github.com/golang-migrate/migrate/v4/database/clickhouse"
 	_ "github.com/golang-migrate/migrate/v4/database/mysql"

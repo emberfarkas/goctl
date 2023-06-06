@@ -10,3 +10,7 @@ init:
 .PHONY: build
 build:
 	go build -ldflags "-X github.com/emberfarkas/goctl/internal/version.Version=$(VERSION) -X github.com/emberfarkas/goctl/internal/version.Branch=$(BRANCH) -X github.com/emberfarkas/goctl/internal/version.Revision=$(REVISION) -X github.com/emberfarkas/goctl/internal/version.BuildDate=$(BUILD_DATE)"
+
+.PHONY: install
+install:
+	go install -ldflags "-X github.com/emberfarkas/goctl/internal/version.Version=$(VERSION) -X github.com/emberfarkas/goctl/internal/version.Branch=$(BRANCH) -X github.com/emberfarkas/goctl/internal/version.Revision=$(REVISION) -X github.com/emberfarkas/goctl/internal/version.BuildDate=$(BUILD_DATE)"
