@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/emberfarkas/goctl/internal/account"
 	"github.com/emberfarkas/goctl/internal/benchmark"
 	"github.com/emberfarkas/goctl/internal/binlog"
@@ -16,6 +15,7 @@ import (
 	"github.com/emberfarkas/goctl/internal/pdfcov"
 	"github.com/emberfarkas/goctl/internal/ss"
 	"github.com/emberfarkas/goctl/internal/telegram"
+	"github.com/emberfarkas/goctl/internal/version"
 	"github.com/go-bamboo/pkg/log"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +29,6 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
 }
-var cfgFile string
 
 func init() {
 	// Here you will define your flags and configuration settings.
@@ -51,11 +50,11 @@ func init() {
 	rootCmd.AddCommand(diff.Cmd)
 	rootCmd.AddCommand(leveldb.Cmd)
 	rootCmd.AddCommand(nft.Cmd)
+	rootCmd.AddCommand(version.Cmd)
 }
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Print(cfgFile)
 }
