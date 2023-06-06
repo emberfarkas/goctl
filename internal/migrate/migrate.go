@@ -5,16 +5,16 @@ import (
 	"os"
 	"time"
 
-	"github.com/go-bamboo/pkg/log"
-	commonds "github.com/go-bamboo/pkg/migrate"
 	_ "github.com/golang-migrate/migrate/v4/database"
+	_ "github.com/golang-migrate/migrate/v4/database/clickhouse"
 	_ "github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
-
-	// _ "github.com/golang-migrate/migrate/v4/database/sqlserver"
-	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/source"
+
+	"github.com/go-bamboo/pkg/log"
+	commonds "github.com/go-bamboo/pkg/migrate"
+	"github.com/golang-migrate/migrate/v4"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )
