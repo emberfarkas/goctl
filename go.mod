@@ -23,6 +23,7 @@ require (
 )
 
 require (
+	github.com/ClickHouse/clickhouse-go v1.4.3
 	github.com/fbsobreira/gotron-sdk v0.0.0-20211102183839-58a64f4da5f4 // indirect
 	github.com/go-audio/wav v1.1.0
 	github.com/go-bamboo/contrib v0.0.14-0.20230525034658-fd52460f294d
@@ -34,4 +35,5 @@ require (
 	github.com/tidwall/sjson v1.2.5
 	github.com/tklauser/numcpus v0.5.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
+	go.uber.org/zap v1.23.0
 )

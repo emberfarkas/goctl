@@ -23,16 +23,17 @@ var Cmd = &cobra.Command{
 			if configFileParams, err := clap.LoadConfigFile(clap.GenPath); err == nil && configFileParams != nil {
 				cmdParse = *configFileParams
 			}
-		}
-		// cmd first
-		if sourceURL != "" {
-			cmdParse.SourceURL = sourceURL
-		}
-		if sourceURL == "" && path != "" {
-			cmdParse.SourceURL = path
-		}
-		if databaseURL != "" {
-			cmdParse.DatabaseURL = databaseURL
+		} else {
+			// cmd first
+			if sourceURL != "" {
+				cmdParse.SourceURL = sourceURL
+			}
+			if sourceURL == "" && path != "" {
+				cmdParse.SourceURL = path
+			}
+			if databaseURL != "" {
+				cmdParse.DatabaseURL = databaseURL
+			}
 		}
 		m, err := migrate.New(cmdParse.SourceURL, cmdParse.DatabaseURL)
 		if err != nil {
