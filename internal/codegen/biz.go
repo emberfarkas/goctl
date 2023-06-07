@@ -175,11 +175,7 @@ func (uc *biz) genCodeModelGo(ctx context.Context, tab *SysTables) (err error) {
 		wd := filex.GetCurrentPath()
 		prefixPath = path.Join(wd, backpath, tab.Module, "internal/model")
 	}
-	if err = filex.PathCreate(prefixPath); err != nil {
-		log.Fatal(err)
-		return
-	}
-	if err = filex.FileCreate(b1, path.Join(prefixPath, tab.PackageName+".go")); err != nil {
+	if err = filex.CreateFile(path.Join(prefixPath, tab.PackageName+".go")); err != nil {
 		log.Fatal(err)
 		return
 	}
@@ -210,10 +206,7 @@ func (uc *biz) genCodeDaoGo(ctx context.Context, tab *SysTables) (err error) {
 		wd := filex.GetCurrentPath()
 		prefixPath = path.Join(wd, backpath, tab.Module, "internal/dao")
 	}
-	if err = filex.PathCreate(prefixPath); err != nil {
-		return
-	}
-	if err = filex.FileCreate(b2, path.Join(prefixPath, tab.PackageName+".go")); err != nil {
+	if err = filex.CreateFile(path.Join(prefixPath, tab.PackageName+".go")); err != nil {
 		return
 	}
 	return
@@ -243,10 +236,7 @@ func (uc *biz) genCodeApiJs(ctx context.Context, tab *SysTables) (err error) {
 		wd := filex.GetCurrentPath()
 		prefixPath = path.Join(wd, adminpath, "api", tab.Module)
 	}
-	if err = filex.PathCreate(prefixPath); err != nil {
-		return
-	}
-	if err = filex.FileCreate(b3, path.Join(prefixPath, tab.PackageName+".js")); err != nil {
+	if err = filex.CreateFile(path.Join(prefixPath, tab.PackageName+".js")); err != nil {
 		return
 	}
 	return
@@ -276,10 +266,7 @@ func (uc *biz) genCodeViewVue(ctx context.Context, tab *SysTables) (err error) {
 		wd := filex.GetCurrentPath()
 		prefixPath = path.Join(wd, adminpath, "views", tab.Module, tab.PackageName)
 	}
-	if err = filex.PathCreate(prefixPath); err != nil {
-		return
-	}
-	if err = filex.FileCreate(b4, path.Join(prefixPath, "index.vue")); err != nil {
+	if err = filex.CreateFile(path.Join(prefixPath, "index.vue")); err != nil {
 		return
 	}
 	return
