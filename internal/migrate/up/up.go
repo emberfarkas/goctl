@@ -1,6 +1,7 @@
 package up
 
 import (
+	"errors"
 	"github.com/emberfarkas/goctl/internal/migrate/clap"
 	"github.com/go-bamboo/pkg/log"
 	"github.com/golang-migrate/migrate/v4"
@@ -45,7 +46,8 @@ var Cmd = &cobra.Command{
 			}
 		}()
 		if err = m.Up(); err != nil {
-			if err.Error() == "no change" {
+			if errors.Is(err, migrate.ErrNoChange) {
+				return nil
 			}
 			return err
 		}

@@ -3,8 +3,6 @@ package nft
 import (
 	"context"
 	"fmt"
-	"github.com/go-bamboo/pkg/fs/s3"
-	"github.com/tidwall/sjson"
 	"net/url"
 	"os"
 	"strings"
@@ -13,10 +11,12 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/go-bamboo/contrib/contracts/erc721"
+	"github.com/go-bamboo/pkg/fs/s3"
 	"github.com/go-bamboo/pkg/log"
 	"github.com/imroc/req/v3"
 	"github.com/spf13/cobra"
 	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 )
 
 var Cmd = &cobra.Command{
@@ -69,16 +69,21 @@ func run1(ctx context.Context) error {
 	md := res.Bytes()
 	imageURL := gjson.GetBytes(md, "image").String()
 	mainURL := gjson.GetBytes(md, "modified_url").String()
+
 	log.Infof("imageUrl: %v", imageURL)
 	log.Infof("mainURL: %v", mainURL)
 
+	return updateToken(ctx, md)
+}
+
+func updateToken(ctx context.Context, md []byte) error {
 	// 下面更新数据
-	newImageUrl := "https://ipfs-v2.halonft.art/bsc_v2/haloworld/L2/image/1012.jpg"
+	newImageUrl := fmt.Sprintf("https://ipfs-v2.halonft.art/bsc_v2/haloworld/L1/image/%v.jpg", tokenID)
 	nmd, err := sjson.SetBytes(md, "image", newImageUrl)
 	if err != nil {
 		return err
 	}
-	newMainUrl := "https://ipfs-v2.halonft.art/bsc_v2/haloworld/L2/res/1012.main"
+	newMainUrl := fmt.Sprintf("https://ipfs-v2.halonft.art/bsc_v2/haloworld/L1/res/%v.main", tokenID)
 	nmd, err = sjson.SetBytes(nmd, "modified_url", newMainUrl)
 	if err != nil {
 		return err
@@ -90,7 +95,7 @@ func run1(ctx context.Context) error {
 		log.Error(err)
 		return err
 	}
-	jsonURI, err := s3session.UploadBytesToBucketDir(ctx, "ipfs-v2.halonft.art", "bsc_v2/haloworld/L2/token", "1012.json", nmd)
+	jsonURI, err := s3session.UploadBytesToBucketDir(ctx, "ipfs-v2.halonft.art", "bsc_v2/haloworld/L1/token", fmt.Sprintf("%v.json", tokenID), nmd)
 	if err != nil {
 		log.Error(err)
 		return err
