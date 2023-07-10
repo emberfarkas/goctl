@@ -5,10 +5,8 @@ name: Go
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+    tags:
+      - "v*.*.*"
 jobs:
 
   build:
@@ -25,14 +23,12 @@ jobs:
 #      run: go test -v ./...
 
     - name: Build
-      run: make build
+      run: make build && echo ${{ github.sha }} > Release.txt
 
-#    - name: Deploy to Ec2 lifeform7
-#      uses: appleboy/scp-action@master
-#      with:
-#        host: ${{ secrets.PROD_LF_HOST }}
-#        username: ubuntu
-#        key: ${{ secrets.DEV_SERVER_PRIVATE_KEY }}
-#        passphrase: ${{ secrets.DEV_SERVER_PASSPHRASE }}
-#        source: "goctl"
-#        target: "goctl"
+    - name: Test
+      run: cat Release.txt
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: Release.txt
