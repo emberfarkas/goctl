@@ -25,7 +25,7 @@ var Cmd = &cobra.Command{
 	Short: "version相关辅助工具",
 	Long:  `打印版本信息`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Printf("goctl[%v]\n", Version)
+		fmt.Printf("goctl version %v\n", Version)
 		return nil
 	},
 }
