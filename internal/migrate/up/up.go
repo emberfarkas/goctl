@@ -21,9 +21,11 @@ var Cmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var cmdParse clap.YamlConfig
 		if clap.GenPath != "" {
-			if configFileParams, err := clap.LoadConfigFile(clap.GenPath); err == nil && configFileParams != nil {
-				cmdParse = *configFileParams
+			configFileParams, err := clap.LoadConfigFile(clap.GenPath)
+			if err != nil {
+				return err
 			}
+			cmdParse = *configFileParams
 		} else {
 			// cmd first
 			if sourceURL != "" {
