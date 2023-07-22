@@ -25,5 +25,5 @@ var Cmd = &cobra.Command{
 
 func init() {
 	Cmd.AddCommand(new.Cmd, up.Cmd)
-	Cmd.PersistentFlags().StringVar(&clap.GenPath, "c", "", "is path for gen.yml")
+	Cmd.PersistentFlags().StringVarP(&clap.GenPath, "conf", "c", "", "is path for gen.yml")
 }
