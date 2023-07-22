@@ -3,7 +3,6 @@ package new
 import (
 	"github.com/emberfarkas/goctl/internal/migrate/clap"
 	"github.com/emberfarkas/goctl/internal/migrate/utils"
-	commonds "github.com/go-bamboo/pkg/migrate"
 	"github.com/spf13/cobra"
 	"time"
 )
@@ -25,7 +24,7 @@ var Cmd = &cobra.Command{
 		}
 		seq := false
 		seqDigits := 6
-		return commonds.CreateCmd(cmdParse.Path, time.Now(), utils.DefaultTimeFormat, name, "sql", seq, seqDigits, true)
+		return utils.CreateCmd(cmdParse.Path, time.Now(), utils.DefaultTimeFormat, name, "sql", seq, seqDigits, true)
 	},
 }
 

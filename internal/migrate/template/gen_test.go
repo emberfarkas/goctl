@@ -1,11 +1,11 @@
 package template_test
 
 import (
+	"github.com/emberfarkas/goctl/internal/codegen/model"
 	"html/template"
 	"os"
 	"testing"
 
-	"github.com/emberfarkas/goctl/internal/codegen"
 	. "github.com/emberfarkas/goctl/internal/codegen/template"
 )
 
@@ -17,7 +17,7 @@ func TestGoModelTemplate(t *testing.T) {
 	}
 	t1 := template.New(string(b))
 
-	table := codegen.SysTables{
+	table := model.SysTables{
 		TBName:      "hello",
 		PackageName: "hello",
 	}

@@ -181,9 +181,8 @@ func run(ctx context.Context) error {
 	}
 
 	db := gormx.MustNew(&gormx.Conf{
-		Driver:   gormx.DBType(gormx.DBType_value[config.DB]),
-		Source:   config.DSN,
-		LogLevel: 4,
+		Driver: gormx.DBType(gormx.DBType_value[config.DB]),
+		Source: config.DSN,
 	})
 
 	g := gen.NewGenerator(gen.Config{
