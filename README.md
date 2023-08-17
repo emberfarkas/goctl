@@ -5,7 +5,7 @@
 ## 依赖工具
 
 ``` bash
-go install github.com/UnnoTed/fileb0x@latest
+make init
 ```
 
 ## 安装工具
