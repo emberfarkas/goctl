@@ -16,7 +16,6 @@ require (
 	github.com/tyler-smith/go-bip39 v1.1.0
 	github.com/xuri/excelize/v2 v2.6.1
 	golang.org/x/net v0.11.0
-	gopkg.in/telebot.v3 v3.1.2
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/gen v0.3.18
 )
@@ -29,6 +28,7 @@ require (
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/golang-migrate/migrate/v4 v4.15.2
 	github.com/matryer/is v1.4.0 // indirect
+	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/tidwall/gjson v1.14.3
 	github.com/tidwall/sjson v1.2.5
