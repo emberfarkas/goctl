@@ -2,29 +2,29 @@ package pdfcov
 
 import (
 	"bytes"
-	"html/template"
 	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
+	"text/template"
 	"time"
 
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 )
 
-//RequestPdf requestpdf struct
+// RequestPdf requestpdf struct
 type RequestPdf struct {
 	body string
 }
 
-//NewRequestPdf request to pdf function
+// NewRequestPdf request to pdf function
 func NewRequestPdf(body string) *RequestPdf {
 	return &RequestPdf{
 		body: body,
 	}
 }
 
-//parsing template function
+// parsing template function
 func (r *RequestPdf) ParseTemplate(templateFileName string, data interface{}) error {
 	t, err := template.ParseFiles(templateFileName)
 	if err != nil {
@@ -38,7 +38,7 @@ func (r *RequestPdf) ParseTemplate(templateFileName string, data interface{}) er
 	return nil
 }
 
-//generate pdf function
+// generate pdf function
 func (r *RequestPdf) GeneratePDF(pdfPath string) (bool, error) {
 	t := time.Now().Unix()
 	// write whole the body
