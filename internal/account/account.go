@@ -89,7 +89,7 @@ func run(ctx context.Context) error {
 			if err != nil {
 				return err
 			}
-			_, _, priv, err := key.EncodeEth()
+			priv, err := key.PrivateKey()
 			if err != nil {
 				return err
 			}
