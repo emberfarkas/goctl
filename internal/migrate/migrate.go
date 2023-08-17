@@ -3,6 +3,7 @@ package migrate
 import (
 	"github.com/emberfarkas/goctl/internal/migrate/clap"
 	"github.com/emberfarkas/goctl/internal/migrate/down"
+	"github.com/emberfarkas/goctl/internal/migrate/force"
 	"github.com/emberfarkas/goctl/internal/migrate/new"
 	"github.com/emberfarkas/goctl/internal/migrate/up"
 
@@ -25,6 +26,6 @@ var Cmd = &cobra.Command{
 }
 
 func init() {
-	Cmd.AddCommand(new.Cmd, up.Cmd, down.Cmd)
+	Cmd.AddCommand(new.Cmd, up.Cmd, down.Cmd, force.Cmd)
 	Cmd.PersistentFlags().StringVarP(&clap.GenPath, "conf", "c", "", "is path for gen.yml")
 }
