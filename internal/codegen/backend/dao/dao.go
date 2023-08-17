@@ -13,9 +13,9 @@ import (
 )
 
 var Cmd = &cobra.Command{
-	Use:   "model",
-	Short: "生model模版",
-	Long:  `生model模版文件`,
+	Use:   "dao",
+	Short: "生dao模版",
+	Long:  `生dao模版文件`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return genCodeDaoGo(cmd.Context(), nil)
 	},
@@ -23,7 +23,7 @@ var Cmd = &cobra.Command{
 var backpath string
 
 func init() {
-	Cmd.Flags().StringVar(&backpath, "backpath", "app/service", "后端路径")
+	Cmd.Flags().StringVar(&backpath, "path", "app/service", "后端路径")
 }
 
 func genCodeDaoGo(ctx context.Context, tab *model.SysTables) (err error) {

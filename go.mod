@@ -3,14 +3,13 @@ module github.com/emberfarkas/goctl
 go 1.16
 
 require (
-	gitee.com/teacherming/keygen v0.0.0-20220907143528-1ac51f8760ef
+	gitee.com/teacherming/keygen v0.0.3-0.20230812195054-a5fa319ecb03
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2
 	github.com/ethereum/go-ethereum v1.10.25
 	github.com/go-bamboo/pkg v0.0.34-0.20230530034707-1a52ff144b11
 	github.com/go-mysql-org/go-mysql v1.6.0
 	github.com/imroc/req/v3 v3.34.0
 	github.com/machinebox/graphql v0.2.2
-	github.com/peterh/liner v1.2.2
 	github.com/sony/sonyflake v1.1.0
 	github.com/spf13/cobra v1.5.0
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
@@ -33,7 +32,6 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/tidwall/gjson v1.14.3
 	github.com/tidwall/sjson v1.2.5
-	github.com/tklauser/numcpus v0.5.0 // indirect
-	github.com/yusufpapurcu/wmi v1.2.2 // indirect
+	github.com/yusufpapurcu/wmi v1.2.3 // indirect
 	go.uber.org/zap v1.23.0
 )

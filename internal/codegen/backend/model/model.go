@@ -23,7 +23,7 @@ var Cmd = &cobra.Command{
 var backpath string
 
 func init() {
-	Cmd.Flags().StringVar(&backpath, "backpath", "app/service", "后端路径")
+	Cmd.Flags().StringVar(&backpath, "path", "app/service", "后端路径")
 }
 
 func genCodeModelGo(ctx context.Context, tab *model.SysTables) (err error) {
