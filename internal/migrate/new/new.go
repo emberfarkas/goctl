@@ -24,7 +24,7 @@ var Cmd = &cobra.Command{
 		}
 		seq := false
 		seqDigits := 6
-		return utils.CreateCmd(cmdParse.Path, time.Now(), utils.DefaultTimeFormat, name, "sql", seq, seqDigits, true)
+		return utils.CreateCmd(cmdParse.SourceURL, time.Now(), utils.DefaultTimeFormat, name, "sql", seq, seqDigits, true)
 	},
 }
 

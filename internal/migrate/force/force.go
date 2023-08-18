@@ -10,7 +10,6 @@ import (
 
 var (
 	sourceURL   string
-	path        string
 	databaseURL string
 	version     int
 )
@@ -32,11 +31,11 @@ var Cmd = &cobra.Command{
 			if sourceURL != "" {
 				cmdParse.SourceURL = sourceURL
 			}
-			if sourceURL == "" && path != "" {
-				cmdParse.SourceURL = path
-			}
 			if databaseURL != "" {
 				cmdParse.DatabaseURL = databaseURL
+			}
+			if version > 0 {
+				cmdParse.Version = version
 			}
 		}
 		m, err := migrate.New(cmdParse.SourceURL, cmdParse.DatabaseURL)
@@ -48,7 +47,7 @@ var Cmd = &cobra.Command{
 				log.Error(err)
 			}
 		}()
-		if err = m.Force(version); err != nil {
+		if err = m.Force(cmdParse.Version); err != nil {
 			if errors.Is(err, migrate.ErrNoChange) {
 				return nil
 			}
@@ -60,7 +59,6 @@ var Cmd = &cobra.Command{
 
 func init() {
 	Cmd.Flags().StringVar(&sourceURL, "source", "file://./migrations", "file://./migrations")
-	Cmd.Flags().StringVar(&path, "path", "./migrations", "specify a directory for output")
 	Cmd.Flags().StringVar(&databaseURL, "db", "", "input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]")
 	Cmd.Flags().IntVar(&version, "version", -1, "fix and force version")
 }

@@ -10,7 +10,6 @@ import (
 
 var (
 	sourceURL   string
-	path        string
 	databaseURL string
 )
 
@@ -30,9 +29,6 @@ var Cmd = &cobra.Command{
 			// cmd first
 			if sourceURL != "" {
 				cmdParse.SourceURL = sourceURL
-			}
-			if sourceURL == "" && path != "" {
-				cmdParse.SourceURL = path
 			}
 			if databaseURL != "" {
 				cmdParse.DatabaseURL = databaseURL
@@ -59,6 +55,5 @@ var Cmd = &cobra.Command{
 
 func init() {
 	Cmd.Flags().StringVar(&sourceURL, "source", "file://./migrations", "file://./migrations")
-	Cmd.Flags().StringVar(&path, "path", "./migrations", "specify a directory for output")
 	Cmd.Flags().StringVar(&databaseURL, "db", "", "input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]")
 }

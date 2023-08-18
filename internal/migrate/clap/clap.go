@@ -12,9 +12,8 @@ var GenPath string
 
 // YamlConfig is yaml config struct
 type YamlConfig struct {
-	Version     string `yaml:"version"` //
+	Version     int    `yaml:"version"` //
 	SourceURL   string `yaml:"source"`
-	Path        string `yaml:"path"` // specify a directory for migrates
 	DatabaseURL string `yaml:"database"`
 }
 

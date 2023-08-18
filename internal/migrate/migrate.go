@@ -6,16 +6,20 @@ import (
 	"github.com/emberfarkas/goctl/internal/migrate/force"
 	"github.com/emberfarkas/goctl/internal/migrate/new"
 	"github.com/emberfarkas/goctl/internal/migrate/up"
-
-	_ "github.com/ClickHouse/clickhouse-go"
-	_ "github.com/golang-migrate/migrate/v4/database"
-	_ "github.com/golang-migrate/migrate/v4/database/clickhouse"
-	_ "github.com/golang-migrate/migrate/v4/database/mysql"
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
-	_ "github.com/golang-migrate/migrate/v4/source"
-
 	"github.com/spf13/cobra"
+
+	// clickhouse
+	_ "github.com/ClickHouse/clickhouse-go"
+	_ "github.com/golang-migrate/migrate/v4/database/clickhouse"
+	// mysql
+	_ "github.com/golang-migrate/migrate/v4/database/mysql"
+	// postgres
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	// sqlite3
+	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
+
+	_ "github.com/golang-migrate/migrate/v4/database"
+	_ "github.com/golang-migrate/migrate/v4/source"
 )
 
 // Cmd represents the new command
