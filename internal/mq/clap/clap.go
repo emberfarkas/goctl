@@ -2,9 +2,9 @@ package clap
 
 import (
 	"github.com/go-bamboo/pkg/client/rabbitmq"
+	"github.com/go-bamboo/pkg/time"
 	"gopkg.in/yaml.v3"
 	"os"
-	"time"
 )
 
 const Version = "1.0.1"
@@ -14,7 +14,7 @@ type YamlConfig struct {
 	Version string               `yaml:"version"` //
 	Conn    *rabbitmq.RabbitConf `yaml:"conn"`
 	Names   []string             `yaml:"names"`
-	Ttl     time.Time            `yaml:"ttl"`
+	Ttl     time.Duration        `yaml:"ttl"`
 }
 
 type Config struct {
