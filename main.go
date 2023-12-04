@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/emberfarkas/goctl/internal/account"
+	"github.com/emberfarkas/goctl/internal/benchhalo"
 	"github.com/emberfarkas/goctl/internal/benchmark"
 	"github.com/emberfarkas/goctl/internal/binlog"
 	"github.com/emberfarkas/goctl/internal/codegen"
@@ -37,6 +38,7 @@ func init() {
 	//
 	rootCmd.AddCommand(account.Cmd)
 	rootCmd.AddCommand(benchmark.Cmd)
+	rootCmd.AddCommand(benchhalo.Cmd)
 	rootCmd.AddCommand(consul.Cmd)
 	rootCmd.AddCommand(migrate.Cmd)
 	rootCmd.AddCommand(ss.Cmd)

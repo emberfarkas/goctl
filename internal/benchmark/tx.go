@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"fmt"
+	"github.com/go-bamboo/pkg/uuid"
 	"math"
 	"math/big"
 	"runtime"
@@ -22,7 +23,6 @@ import (
 	"github.com/ethereum/go-ethereum/rlp"
 	"github.com/go-bamboo/contrib/contracts/flattened"
 	"github.com/go-bamboo/pkg/log"
-	"github.com/go-bamboo/pkg/tools"
 	"github.com/sony/sonyflake"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/opt"
@@ -191,8 +191,8 @@ func (uc *biz) contractsMint(ctx context.Context, wg *sync.WaitGroup, from accou
 	nonce, _ := uc.GetNonce(ctx, "ETH", from.Address.Hex())
 	ctrctAddr := common.HexToAddress(contractAddress)
 	for i := 0; i < n; i++ {
-		tokenURI := tools.GetUUID()
-		contentHash := tools.GetUUID()
+		tokenURI := uuid.New()
+		contentHash := uuid.New()
 		tokenId, _ := uc.sf.NextID()
 		c := pool.Get().(*ethclient.Client)
 		media, err := flattened.NewMedia(ctrctAddr, c)

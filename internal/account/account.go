@@ -2,16 +2,14 @@ package account
 
 import (
 	"context"
-	"io/fs"
-	"io/ioutil"
-	"math"
-
 	"gitee.com/teacherming/keygen"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/crypto"
 	pkgcrypto "github.com/go-bamboo/pkg/crypto"
 	"github.com/spf13/cobra"
 	"github.com/tyler-smith/go-bip39"
+	"io/fs"
+	"io/ioutil"
 )
 
 // Cmd represents the config command
@@ -65,10 +63,15 @@ func run(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		ks := keystore.NewKeyStore("keystore", int(math.Pow(2, 7)), int(math.Pow(2, 9)))
+		ks := keystore.NewKeyStore("keystore", keystore.StandardScryptN, keystore.StandardScryptP)
 		_, err = ks.ImportECDSA(privKey, "123456")
 		if err != nil {
 			return err
+		}
+	case "new":
+		ks := keystore.NewKeyStore("./keystore", keystore.StandardScryptN, keystore.StandardScryptP)
+		for i := 0; i < 100000; i++ {
+			ks.NewAccount("123456")
 		}
 	default:
 		priv, err := ioutil.ReadFile("key")
@@ -83,7 +86,7 @@ func run(ctx context.Context) error {
 		if err != nil {
 			return err
 		}
-		ks := keystore.NewKeyStore("keystore", int(math.Pow(2, 7)), int(math.Pow(2, 9)))
+		ks := keystore.NewKeyStore("keystore", keystore.StandardScryptN, keystore.StandardScryptP)
 		for i := offset; i < limit; i++ {
 			key, err := km.GetKey(keygen.PurposeBIP44, keygen.CoinTypeETH, 1, 0, uint32(i))
 			if err != nil {
