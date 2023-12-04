@@ -27,7 +27,6 @@ var (
 func init() {
 
 	// Here you will define your flags and configuration settings.
-
 	Cmd.Flags().StringVarP(&input, "input", "i", "", "path for file")
 	Cmd.Flags().Int64VarP(&offset, "offset", "n", 0, "offset for file")
 	Cmd.Flags().StringVarP(&output, "output", "o", "", "path for file")

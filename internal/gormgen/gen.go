@@ -3,46 +3,15 @@ package gormgen
 import (
 	"context"
 	"fmt"
-	"os"
 	"strings"
 
+	"github.com/emberfarkas/goctl/internal/gormgen/clap"
 	"github.com/go-bamboo/pkg/log"
 	"github.com/go-bamboo/pkg/store/gormx"
+	"github.com/go-playground/validator/v10"
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 	"gorm.io/gen"
 )
-
-const (
-	// DefaultOutPath default path
-	DefaultOutPath = "./internal/dao/query"
-)
-
-// CmdParams is command line parameters
-type CmdParams struct {
-	DSN               string   `yaml:"dsn"`               // consult[https://gorm.io/docs/connecting_to_the_database.html]"
-	DB                string   `yaml:"db"`                // input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]
-	Tables            []string `yaml:"tables"`            // enter the required data table or leave it blank
-	OnlyModel         bool     `yaml:"onlyModel"`         // only generate model
-	OutPath           string   `yaml:"outPath"`           // specify a directory for output
-	OutFile           string   `yaml:"outFile"`           // query code file name, default: gen.go
-	WithUnitTest      bool     `yaml:"withUnitTest"`      // generate unit test for query code
-	ModelPkgName      string   `yaml:"modelPkgName"`      // generated model code's package name
-	FieldNullable     bool     `yaml:"fieldNullable"`     // generate with pointer when field is nullable
-	FieldWithIndexTag bool     `yaml:"fieldWithIndexTag"` // generate field with gorm index tag
-	FieldWithTypeTag  bool     `yaml:"fieldWithTypeTag"`  // generate field with gorm column type tag
-	FieldSignable     bool     `yaml:"fieldSignable"`     // detect integer field's unsigned type, adjust generated data type
-}
-
-// YamlConfig is yaml config struct
-type YamlConfig struct {
-	Version  string     `yaml:"version"`  //
-	Database *CmdParams `yaml:"database"` //
-}
-
-type Config struct {
-	GenGorm YamlConfig `yaml:"genGorm"`
-}
 
 // genModels is gorm/gen generated models
 func genModels(g *gen.Generator, db *gormx.DB, tables []string) (models []interface{}, err error) {
@@ -65,65 +34,27 @@ func genModels(g *gen.Generator, db *gormx.DB, tables []string) (models []interf
 	return models, nil
 }
 
-// loadConfigFile load config file from path
-func loadConfigFile(path string) (*CmdParams, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close() // nolint
-	var config Config
-	if cmdErr := yaml.NewDecoder(file).Decode(&config); cmdErr != nil {
-		return nil, cmdErr
-	}
-	log.Debugf("dsn: %v, db: %v", config.GenGorm.Database.DSN, config.GenGorm.Database.DB)
-	return config.GenGorm.Database, nil
-}
-
 // argParse is parser for cmd
-func argParse() *CmdParams {
-	var cmdParse CmdParams
+func argParse() *clap.CmdParams {
+	var cmdParse clap.CmdParams = clap.CmdParams{
+		DSN:               dsn,
+		DB:                db,
+		Tables:            strings.Split(tableList, ","),
+		OnlyModel:         true,
+		OutPath:           clap.DefaultOutPath,
+		OutFile:           outFile,
+		WithUnitTest:      withUnitTest,
+		ModelPkgName:      modelPkgName,
+		FieldNullable:     fieldNullable,
+		FieldWithIndexTag: fieldWithIndexTag,
+		FieldWithTypeTag:  fieldWithTypeTag,
+		FieldSignable:     fieldSignable,
+	}
 	if genPath != "" {
-		if configFileParams, err := loadConfigFile(genPath); err == nil && configFileParams != nil {
+		if configFileParams, err := clap.LoadConfigFile(genPath); err == nil && configFileParams != nil {
 			cmdParse = *configFileParams
+			return &cmdParse
 		}
-	}
-	// cmd first
-	if dsn != "" {
-		cmdParse.DSN = dsn
-	}
-	if db != "" {
-		cmdParse.DB = db
-	}
-	if tableList != "" {
-		cmdParse.Tables = strings.Split(tableList, ",")
-	}
-	if onlyModel {
-		cmdParse.OnlyModel = true
-	}
-	if outPath != DefaultOutPath {
-		cmdParse.OutPath = outPath
-	}
-	if outFile != "" {
-		cmdParse.OutFile = outFile
-	}
-	if withUnitTest {
-		cmdParse.WithUnitTest = withUnitTest
-	}
-	if modelPkgName != "" {
-		cmdParse.ModelPkgName = modelPkgName
-	}
-	if fieldNullable {
-		cmdParse.FieldNullable = fieldNullable
-	}
-	if fieldWithIndexTag {
-		cmdParse.FieldWithIndexTag = fieldWithIndexTag
-	}
-	if fieldWithTypeTag {
-		cmdParse.FieldWithTypeTag = fieldWithTypeTag
-	}
-	if fieldSignable {
-		cmdParse.FieldSignable = fieldSignable
 	}
 	return &cmdParse
 }
@@ -163,7 +94,7 @@ func init() {
 	Cmd.Flags().StringVar(&db, "db", "", "input mysql or postgres or sqlite or sqlserver. consult[https://gorm.io/docs/connecting_to_the_database.html]")
 	Cmd.Flags().StringVar(&tableList, "tables", "", "enter the required data table or leave it blank")
 	Cmd.Flags().BoolVar(&onlyModel, "onlyModel", false, "only generate models (without query file)")
-	Cmd.Flags().StringVar(&outPath, "outPath", DefaultOutPath, "specify a directory for output")
+	Cmd.Flags().StringVar(&outPath, "outPath", clap.DefaultOutPath, "specify a directory for output")
 	Cmd.Flags().StringVar(&outFile, "outFile", "", "query code file name, default: gen.go")
 	Cmd.Flags().BoolVar(&withUnitTest, "withUnitTest", false, "generate unit test for query code")
 	Cmd.Flags().StringVar(&modelPkgName, "modelPkgName", "", "generated model code's package name")
@@ -178,6 +109,10 @@ func run(ctx context.Context) error {
 	config := argParse()
 	if config == nil {
 		log.Fatal("parse config fail")
+	}
+	var validate *validator.Validate = validator.New()
+	if err := validate.Struct(config); err != nil {
+		return err
 	}
 
 	db := gormx.MustNew(&gormx.Conf{

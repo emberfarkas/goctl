@@ -190,7 +190,7 @@ func saveDB() error {
 func saveXlsx() error {
 	f := excelize.NewFile()
 	// Create a new sheet.
-	index := f.NewSheet("Sheet2")
+	index, _ := f.NewSheet("Sheet2")
 	// Set value of a cell.
 	f.SetCellValue("Sheet2", "A1", "地址")
 	f.SetCellValue("Sheet2", "B1", "数量")

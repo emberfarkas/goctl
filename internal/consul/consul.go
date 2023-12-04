@@ -20,6 +20,9 @@ var Cmd = &cobra.Command{
 }
 
 func run(ctx context.Context) error {
+	//var c registry.Conf = registry.Conf{
+	//	ProviderType: registry.ProviderType_Consul,
+	//}
 	ret, err := services(ctx)
 	if err != nil {
 		return err

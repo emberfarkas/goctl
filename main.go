@@ -12,6 +12,7 @@ import (
 	"github.com/emberfarkas/goctl/internal/gormgen"
 	"github.com/emberfarkas/goctl/internal/leveldb"
 	"github.com/emberfarkas/goctl/internal/migrate"
+	"github.com/emberfarkas/goctl/internal/mq"
 	"github.com/emberfarkas/goctl/internal/nft"
 	"github.com/emberfarkas/goctl/internal/pdfcov"
 	"github.com/emberfarkas/goctl/internal/ss"
@@ -51,6 +52,7 @@ func init() {
 	rootCmd.AddCommand(leveldb.Cmd)
 	rootCmd.AddCommand(nft.Cmd)
 	rootCmd.AddCommand(version.Cmd)
+	rootCmd.AddCommand(mq.Cmd)
 }
 
 func main() {
