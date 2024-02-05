@@ -48,17 +48,17 @@ func createQueue(c *clap.YamlConfig, admin *rabbitmq.Admin, name string) error {
 	//	log.Error(err)
 	//}
 
-	if err := admin.DeclareQueue(&rabbitmq.AdminQueueConf{
-		Name:       fmt.Sprintf("queue.%v", name),
-		Durable:    true,
-		AutoDelete: false,
-		Exclusive:  false,
-		NoWait:     false,
-	}, nil); err != nil {
-		log.Error(err)
-	} else {
-		log.Infof("declare queue: queue.%v", name)
-	}
+	//if err := admin.DeclareQueue(&rabbitmq.AdminQueueConf{
+	//	Name:       fmt.Sprintf("queue.%v", name),
+	//	Durable:    true,
+	//	AutoDelete: false,
+	//	Exclusive:  false,
+	//	NoWait:     false,
+	//}, nil); err != nil {
+	//	log.Error(err)
+	//} else {
+	//	log.Infof("declare queue: queue.%v", name)
+	//}
 
 	//if err := admin.DeclareQueue(&rabbitmq.AdminQueueConf{
 	//	Name:       fmt.Sprintf("queue.%v.newMail", name),
@@ -80,20 +80,20 @@ func createQueue(c *clap.YamlConfig, admin *rabbitmq.Admin, name string) error {
 	//	log.Error(err)
 	//}
 
-	if err := admin.DeclareExchange(&rabbitmq.AdminExchangeConf{
-		Name:       fmt.Sprintf("ex.%v", name),
-		Kind:       "direct",
-		Durable:    true, // 持久保存，在rabbitmq宕机或者重启后交换机会不存在。Transient关机就没有了
-		AutoDelete: false,
-		Internal:   false,
-		NoWait:     false,
-	}, nil); err != nil {
-		log.Error(err)
-	} else {
-		log.Infof("declare exchange: ex.%v", name)
-	}
+	//if err := admin.DeclareExchange(&rabbitmq.AdminExchangeConf{
+	//	Name:       fmt.Sprintf("ex.%v", name),
+	//	Kind:       "direct",
+	//	Durable:    true, // 持久保存，在rabbitmq宕机或者重启后交换机会不存在。Transient关机就没有了
+	//	AutoDelete: false,
+	//	Internal:   false,
+	//	NoWait:     false,
+	//}, nil); err != nil {
+	//	log.Error(err)
+	//} else {
+	//	log.Infof("declare exchange: ex.%v", name)
+	//}
 
-	if err := admin.Bind(fmt.Sprintf("queue.%v", name), "normal", fmt.Sprintf("ex.%v", name), false, nil); err != nil {
+	if err := admin.Bind(fmt.Sprintf("queue.%v", name), "normal", fmt.Sprintf("ex.%v", name), rabbitmq.ExchangeDirect, nil); err != nil {
 		log.Error(err)
 	}
 
