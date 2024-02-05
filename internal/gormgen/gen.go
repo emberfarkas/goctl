@@ -77,7 +77,7 @@ var (
 
 // Cmd represents the config command
 var Cmd = &cobra.Command{
-	Use:   "gormgen",
+	Use:   "gormGen",
 	Short: "初始Gorm模板",
 	Long:  `初始Gorm模板，用来作为`,
 	RunE: func(cmd *cobra.Command, args []string) error {
