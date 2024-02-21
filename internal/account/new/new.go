@@ -13,8 +13,8 @@ var (
 
 var Cmd = &cobra.Command{
 	Use:   "new",
-	Short: "通用模板新建",
-	Long:  `创建migrate模板`,
+	Short: "新账号",
+	Long:  `创建新账号`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ks := keystore.NewKeyStore(path, keystore.StandardScryptN, keystore.StandardScryptP)
 		account, err := ks.NewAccount(pass)

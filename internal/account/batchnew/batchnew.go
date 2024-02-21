@@ -12,7 +12,7 @@ var offset int // 起始值
 var limit int  // 数量
 
 var Cmd = &cobra.Command{
-	Use:   "new",
+	Use:   "batchnew",
 	Short: "通用模板新建",
 	Long:  `创建migrate模板`,
 	RunE: func(cmd *cobra.Command, args []string) error {

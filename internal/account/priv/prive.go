@@ -11,7 +11,7 @@ var (
 )
 
 var Cmd = &cobra.Command{
-	Use:   "new",
+	Use:   "priv",
 	Short: "通用模板新建",
 	Long:  `创建migrate模板`,
 	RunE: func(cmd *cobra.Command, args []string) error {
