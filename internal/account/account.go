@@ -3,6 +3,7 @@ package account
 import (
 	"github.com/emberfarkas/goctl/internal/account/backup"
 	"github.com/emberfarkas/goctl/internal/account/batchnew"
+	"github.com/emberfarkas/goctl/internal/account/info"
 	"github.com/emberfarkas/goctl/internal/account/key"
 	"github.com/emberfarkas/goctl/internal/account/mnemonic"
 	"github.com/emberfarkas/goctl/internal/account/new"
@@ -29,4 +30,5 @@ func init() {
 	Cmd.AddCommand(mnemonic.Cmd)
 	Cmd.AddCommand(new.Cmd)
 	Cmd.AddCommand(priv.Cmd)
+	Cmd.AddCommand(info.Cmd)
 }
