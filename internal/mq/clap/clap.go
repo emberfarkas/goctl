@@ -1,7 +1,7 @@
 package clap
 
 import (
-	"github.com/go-bamboo/pkg/client/rabbitmq"
+	"github.com/go-bamboo/pkg/queue/rabbitmq"
 	"github.com/go-bamboo/pkg/time"
 	"gopkg.in/yaml.v3"
 	"os"

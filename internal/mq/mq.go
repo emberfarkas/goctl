@@ -3,8 +3,8 @@ package mq
 import (
 	"fmt"
 	"github.com/emberfarkas/goctl/internal/mq/clap"
-	"github.com/go-bamboo/pkg/client/rabbitmq"
 	"github.com/go-bamboo/pkg/log"
+	"github.com/go-bamboo/pkg/queue/rabbitmq"
 	"github.com/spf13/cobra"
 )
 
